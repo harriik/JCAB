@@ -1,0 +1,2 @@
+model,evaluation_type,accuracy,macro_precision,macro_recall,macro_f1,mae,rmse
+XGBoost,Synthetic Java Held-Out 80/20 Evaluation,1.0000,1.0000,1.0000,1.0000,0.0001,0.0002

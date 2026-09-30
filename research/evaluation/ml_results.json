@@ -1,0 +1,42 @@
+[
+  {
+    "model": "Random Forest",
+    "evaluation_type": "SciEntsBank Test-UA preliminary benchmark",
+    "metrics": {
+      "accuracy": 0.5722,
+      "macro_f1": 0.4241
+    },
+    "provenance": {
+      "dataset": "SciEntsBank",
+      "split": "Test-UA",
+      "prediction_source": "Historical benchmark log"
+    }
+  },
+  {
+    "model": "XGBoost",
+    "evaluation_type": "SciEntsBank Test-UA preliminary benchmark",
+    "metrics": {
+      "accuracy": 0.4907,
+      "macro_f1": 0.3484
+    },
+    "provenance": {
+      "dataset": "SciEntsBank",
+      "split": "Test-UA",
+      "prediction_source": "Historical benchmark log"
+    }
+  },
+  {
+    "model": "XGBoost",
+    "evaluation_type": "Synthetic Java Development Evaluation",
+    "metrics": {
+      "accuracy": null,
+      "macro_f1": null,
+      "mae": null,
+      "rmse": null
+    },
+    "provenance": {
+      "dataset": "Synthetic 5,000-row Java Conversational Dataset",
+      "status": "PENDING - raw test split unavailable in current environment"
+    }
+  }
+]

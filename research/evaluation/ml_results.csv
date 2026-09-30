@@ -1,0 +1,4 @@
+model,evaluation_type,accuracy,macro_f1,mae,rmse,provenance
+Random Forest,SciEntsBank Test-UA preliminary benchmark,0.5722,0.4241,,,Historical benchmark log
+XGBoost,SciEntsBank Test-UA preliminary benchmark,0.4907,0.3484,,,Historical benchmark log
+XGBoost,Synthetic Java Development Evaluation,,,,,PENDING - Dataset Unavailable

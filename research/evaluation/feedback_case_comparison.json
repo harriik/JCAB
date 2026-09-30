@@ -1,0 +1,85 @@
+[
+  {
+    "case": "CASE_1",
+    "type": "Strong conceptual understanding",
+    "inputs": {
+      "id": "CASE_1",
+      "type": "Strong conceptual understanding",
+      "question": "What is polymorphism in Java?",
+      "initial_response": "Polymorphism means many forms. It allows objects to be treated as instances of their parent class.",
+      "followup_question": "Can you explain method overriding vs overloading?",
+      "followup_response": "Overloading is compile-time polymorphism where methods have same name but different parameters. Overriding is runtime where a child class provides a specific implementation of a parent's method.",
+      "score": 9.2,
+      "learner_level": 2,
+      "topic": "Polymorphism"
+    },
+    "final_output": {
+      "strengths": [
+        "Strong conceptual understanding.",
+        "The response addresses the assessed concept effectively.",
+        "The student demonstrates consistency across the conversation."
+      ],
+      "improvements": [
+        "Add deeper examples or edge cases to strengthen the explanation."
+      ],
+      "feedback": "The response demonstrates strong understanding of the assessed Java concept.",
+      "recommendation": "Proceed to advanced Java concepts such as polymorphism, abstraction, interfaces and design patterns.",
+      "mode": "Development Fallback (Rule-Based)"
+    }
+  },
+  {
+    "case": "CASE_2",
+    "type": "Partial conceptual understanding",
+    "inputs": {
+      "id": "CASE_2",
+      "type": "Partial conceptual understanding",
+      "question": "What is polymorphism in Java?",
+      "initial_response": "It means methods can do different things.",
+      "followup_question": "Can you explain method overriding vs overloading?",
+      "followup_response": "Overloading is when you have different parameters, but I am not sure about overriding.",
+      "score": 5.5,
+      "learner_level": 1,
+      "topic": "Polymorphism"
+    },
+    "final_output": {
+      "strengths": [
+        "The student identifies some relevant aspects of the concept.",
+        "The student attempts both parts of the assessment."
+      ],
+      "improvements": [
+        "Important conceptual details are missing.",
+        "The explanation requires greater clarity and accuracy."
+      ],
+      "feedback": "The response demonstrates partial understanding. Several important aspects require further clarification.",
+      "recommendation": "Review the fundamentals and practice answering conceptual Java questions step by step.",
+      "mode": "Development Fallback (Rule-Based)"
+    }
+  },
+  {
+    "case": "CASE_3",
+    "type": "Incorrect / misconception",
+    "inputs": {
+      "id": "CASE_3",
+      "type": "Incorrect / misconception",
+      "question": "What is polymorphism in Java?",
+      "initial_response": "It's when variables change their data types automatically.",
+      "followup_question": "Can you explain method overriding vs overloading?",
+      "followup_response": "Compile time is when the compiler catches syntax errors.",
+      "score": 1.5,
+      "learner_level": 0,
+      "topic": "Polymorphism"
+    },
+    "final_output": {
+      "strengths": [
+        "The student attempted the assessment."
+      ],
+      "improvements": [
+        "The core concept is not sufficiently explained.",
+        "Important Java terminology or relationships are missing."
+      ],
+      "feedback": "The response indicates that the fundamental concept requires further study.",
+      "recommendation": "Revise the fundamentals before moving to advanced concepts.",
+      "mode": "Development Fallback (Rule-Based)"
+    }
+  }
+]

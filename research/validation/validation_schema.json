@@ -1,0 +1,29 @@
+{
+  "student_validation_raw": {
+    "participant_id": "string",
+    "timestamp": "datetime",
+    "domain": "string",
+    "question_id": "string",
+    "topic": "string",
+    "assessment_question": "string",
+    "initial_response": "string",
+    "followup_question": "string",
+    "followup_response": "string",
+    "predicted_score": "float",
+    "predicted_learner_level": "string",
+    "generated_feedback": "string",
+    "recommended_learning_action": "string"
+  },
+  "student_feedback_ratings": {
+    "participant_id": "string",
+    "timestamp": "datetime",
+    "topic": "string",
+    "q1_relevant": "integer (1-5)",
+    "q2_helpful": "integer (1-5)",
+    "q3_specific": "integer (1-5)",
+    "q4_recommendation": "integer (1-5)",
+    "q5_usability": "integer (1-5)",
+    "most_useful": "text",
+    "needs_improvement": "text"
+  }
+}

@@ -1,0 +1,2 @@
+participant_id,timestamp,topic,q1_relevant,q2_helpful,q3_specific,q4_recommendation,q5_usability,most_useful,needs_improvement
+TEST_01,2026-09-25 14:59:14,Design Patterns (Factory),3,3,3,3,3,Everything,Nothing

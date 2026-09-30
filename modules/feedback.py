@@ -8,7 +8,7 @@ def generate_development_fallback_feedback(score: float, learner_level: Any) -> 
     """
     MODE 1 - DEVELOPMENT FALLBACK
     Rule-based feedback using preliminary model output.
-    Clearly marked internally as fallback/development logic.
+    Clearly marked internally   as fallback/development logic.
     """
     if score >= 8:
         strengths = [
@@ -86,16 +86,16 @@ def generate_llm_feedback(
     followup_response: str,
     score: float,
     learner_level: Any,
-    topic: str
+    topic: str,
+    progress_callback=None
 ) -> Dict[str, Any]:
     """
-    MODE 2 - LLM FEEDBACK (Future integration placeholder)
-    Optional LLM API integration.
+    MODE 2 - LLM FEEDBACK (Multi-Agent Integration)
     """
-    # TODO: Implement LLM API call here in future research stages.
-    # The prompt should provide the context above, and request structured output without inventing scores.
-    raise NotImplementedError("LLM feedback mode is not yet implemented.")
-
+    from modules.llm_agents import run_multi_agent_feedback
+    return run_multi_agent_feedback(
+        question, initial_response, followup_question, followup_response, score, learner_level, topic, progress_callback
+    )
 
 def get_feedback(
     question: str,
@@ -105,7 +105,8 @@ def get_feedback(
     score: float,
     learner_level: Any,
     topic: str,
-    use_llm: bool = False
+    use_llm: bool = False,
+    progress_callback=None
 ) -> Dict[str, Any]:
     """
     Returns feedback based on the selected mode.
@@ -114,10 +115,18 @@ def get_feedback(
     if use_llm:
         try:
             return generate_llm_feedback(
-                question, initial_response, followup_question, followup_response, score, learner_level, topic
+                question, initial_response, followup_question, followup_response, score, learner_level, topic, progress_callback
             )
-        except Exception:
-            # If LLM fails or is not implemented, fallback gracefully
-            pass
+        except Exception as e:
+            import os
+            import logging
+            logging.getLogger("JCAB").error(f"LLM Multi-Agent Pipeline failed: {e}. Falling back to rule-based.")
+            if os.environ.get("LLM_REQUIRED_FOR_TEST", "false").lower() == "true":
+                raise e
+            fallback = generate_development_fallback_feedback(score, learner_level)
+            fallback["fallback_reason"] = str(e)
+            return fallback
             
-    return generate_development_fallback_feedback(score, learner_level)
+    fallback = generate_development_fallback_feedback(score, learner_level)
+    fallback["fallback_reason"] = "LLM configuration disabled"
+    return fallback

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "TC_01",
+    "type": "Strong response",
+    "topic": "Polymorphism",
+    "question": "What is polymorphism?",
+    "initial_response": "Polymorphism means 'many forms', allowing objects to be treated as instances of their parent class.",
+    "followup_question": "Explain compile-time vs runtime polymorphism.",
+    "followup_response": "Compile-time is method overloading where methods have the same name but different parameters. Runtime is method overriding where a subclass provides a specific implementation of a method defined in its parent class.",
+    "expected_behavior": "LLM output reinforces understanding, correctly applies high ML score, and suggests advanced topics like Interfaces or Abstract Classes."
+  },
+  {
+    "id": "TC_02",
+    "type": "Partial response",
+    "topic": "Polymorphism",
+    "question": "What is polymorphism?",
+    "initial_response": "It's when methods can do different things.",
+    "followup_question": "Explain compile-time vs runtime polymorphism.",
+    "followup_response": "Overloading is when you have different parameters, but I'm not sure about runtime overriding.",
+    "expected_behavior": "LLM identifies the gap in runtime overriding understanding, targets the feedback at clarifying overriding, and recommends practice examples specifically for overriding."
+  },
+  {
+    "id": "TC_03",
+    "type": "Incorrect response",
+    "topic": "Polymorphism",
+    "question": "What is polymorphism?",
+    "initial_response": "It's when variables change their data types automatically.",
+    "followup_question": "Explain compile-time vs runtime polymorphism.",
+    "followup_response": "Compile time is when the compiler catches syntax errors.",
+    "expected_behavior": "LLM identifies complete misconception, avoids berating the student, explains the core concept of polymorphism simply, and recommends foundational Java revision."
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "dataset_file": "JCAB_Java_Conversational_Dataset_v1_1_5000_Samples_Original_13_Columns.xlsx",
+  "sheet_name": "All_Data",
+  "train_rows": 4000,
+  "test_rows": 1000,
+  "train_test_split": "80/20 Stratified",
+  "models_used": "Freshly trained in-memory",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "timestamp": "2026-09-24 15:42:26"
+}

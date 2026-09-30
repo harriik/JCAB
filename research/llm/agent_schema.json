@@ -1,0 +1,33 @@
+{
+  "Agent1Analysis": {
+    "understanding": "string",
+    "strengths": ["string"],
+    "weaknesses": ["string"],
+    "misconceptions": ["string"],
+    "confidence": "number (0.0 to 1.0)"
+  },
+  "Agent2Feedback": {
+    "feedback_summary": "string",
+    "strengths": ["string"],
+    "areas_to_improve": ["string"],
+    "explanation": "string",
+    "encouragement": "string"
+  },
+  "Agent3Recommendation": {
+    "recommended_topic": "string",
+    "reason": "string",
+    "recommended_action": "string",
+    "practice_suggestions": ["string"],
+    "next_learning_step": "string"
+  },
+  "Agent4Coordinator": {
+    "overall_summary": "string",
+    "strengths": ["string"],
+    "areas_to_improve": ["string"],
+    "conceptual_issues": ["string"],
+    "personalized_feedback": "string",
+    "learning_recommendation": "string",
+    "next_learning_step": "string",
+    "practice_suggestions": ["string"]
+  }
+}

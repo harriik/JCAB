@@ -1,0 +1,2 @@
+model,evaluation_type,accuracy,macro_precision,macro_recall,macro_f1,mae,rmse
+XGBoost,Synthetic Java Development Evaluation,1.0000,1.0000,1.0000,1.0000,5.3025,5.3030
