@@ -1,0 +1,1353 @@
+{
+  "OOP Fundamentals": {
+    "question_id": "Q_001",
+    "topic": "OOP Fundamentals",
+    "expected_concepts": [
+      "encapsulation",
+      "inheritance",
+      "polymorphism",
+      "abstraction",
+      "objects",
+      "classes",
+      "maintainability",
+      "modularity",
+      "reusability"
+    ],
+    "important_keywords": [
+      "encapsulation",
+      "inheritance",
+      "polymorphism",
+      "abstraction",
+      "object",
+      "class",
+      "maintain",
+      "reuse"
+    ],
+    "reference_explanation": "Object-Oriented Programming (OOP) in Java relies on encapsulation for data hiding, inheritance for reusability, polymorphism for flexibility, and abstraction to simplify complexity. These concepts collectively enable modularity and maintainable code design."
+  },
+  "Inheritance": {
+    "question_id": "Q_002",
+    "topic": "Inheritance",
+    "expected_concepts": [
+      "reusability",
+      "extends",
+      "parent class",
+      "child class",
+      "superclass",
+      "subclass",
+      "method overriding",
+      "is-a relationship",
+      "single inheritance",
+      "multilevel inheritance",
+      "multiple inheritance not supported"
+    ],
+    "important_keywords": [
+      "extend",
+      "parent",
+      "child",
+      "super",
+      "sub",
+      "override",
+      "reuse",
+      "single",
+      "multilevel"
+    ],
+    "reference_explanation": "Inheritance allows a child class to acquire properties and methods of a parent class using the 'extends' keyword. It promotes code reusability and establishes an 'is-a' relationship. Java supports single and multilevel inheritance but not multiple inheritance to avoid the diamond problem."
+  },
+  "Polymorphism": {
+    "question_id": "Q_003",
+    "topic": "Polymorphism",
+    "expected_concepts": [
+      "many forms",
+      "method overriding",
+      "method overloading",
+      "runtime polymorphism",
+      "compile-time polymorphism",
+      "dynamic method dispatch",
+      "interfaces",
+      "upcasting"
+    ],
+    "important_keywords": [
+      "form",
+      "override",
+      "overload",
+      "runtime",
+      "compile",
+      "dynamic",
+      "dispatch",
+      "interface"
+    ],
+    "reference_explanation": "Polymorphism allows objects to be treated as instances of their parent class or interface, taking 'many forms'. It includes compile-time polymorphism through method overloading and runtime polymorphism through method overriding and dynamic method dispatch."
+  },
+  "Encapsulation": {
+    "question_id": "Q_004",
+    "topic": "Encapsulation",
+    "expected_concepts": [
+      "data hiding",
+      "private fields",
+      "public getters",
+      "public setters",
+      "access modifiers",
+      "security",
+      "control access",
+      "protection",
+      "bundling data and methods"
+    ],
+    "important_keywords": [
+      "hide",
+      "private",
+      "getter",
+      "setter",
+      "modifier",
+      "secure",
+      "protect",
+      "bundle"
+    ],
+    "reference_explanation": "Encapsulation bundles data (variables) and methods operating on that data within a single unit (class). It is achieved by declaring fields as private and providing public getters and setters, enforcing data hiding, access control, and security."
+  },
+  "Exception Handling": {
+    "question_id": "Q_005",
+    "topic": "Exception Handling",
+    "expected_concepts": [
+      "checked exceptions",
+      "unchecked exceptions",
+      "compile time",
+      "runtime",
+      "try catch finally",
+      "throws keyword",
+      "throw keyword",
+      "custom exceptions",
+      "recovery"
+    ],
+    "important_keywords": [
+      "check",
+      "uncheck",
+      "compile",
+      "runtime",
+      "try",
+      "catch",
+      "finally",
+      "throws",
+      "throw",
+      "custom",
+      "recover"
+    ],
+    "reference_explanation": "Exception handling manages runtime errors to maintain normal application flow. Checked exceptions are verified at compile-time (e.g., IOException), while unchecked exceptions occur at runtime (e.g., NullPointerException). Custom exceptions handle domain-specific errors."
+  },
+  "Multithreading": {
+    "question_id": "Q_006",
+    "topic": "Multithreading",
+    "expected_concepts": [
+      "thread class",
+      "runnable interface",
+      "concurrent execution",
+      "start method",
+      "run method",
+      "multiple inheritance limitation",
+      "parallelism",
+      "cpu utilization"
+    ],
+    "important_keywords": [
+      "thread",
+      "runnable",
+      "concurrent",
+      "start",
+      "run",
+      "extend",
+      "implement",
+      "parallel"
+    ],
+    "reference_explanation": "Multithreading enables concurrent execution of two or more parts of a program. A thread is created by extending the Thread class or implementing the Runnable interface. Implementing Runnable is preferred as it avoids the single inheritance limitation."
+  },
+  "Collections Framework": {
+    "question_id": "Q_007",
+    "topic": "Collections Framework",
+    "expected_concepts": [
+      "list",
+      "set",
+      "map",
+      "ordered collection",
+      "duplicates allowed",
+      "unique elements",
+      "key value pairs",
+      "hashmap",
+      "treemap",
+      "sorted",
+      "hashing"
+    ],
+    "important_keywords": [
+      "list",
+      "set",
+      "map",
+      "order",
+      "duplicate",
+      "unique",
+      "key",
+      "value",
+      "hash",
+      "tree",
+      "sort"
+    ],
+    "reference_explanation": "The Collections Framework provides architectures to store and manipulate groups of objects. A List is ordered and allows duplicates. A Set contains unique elements. A Map stores key-value pairs. HashMap provides O(1) unordered access, while TreeMap provides sorted order."
+  },
+  "JVM Architecture": {
+    "question_id": "Q_008",
+    "topic": "JVM Architecture",
+    "expected_concepts": [
+      "platform independence",
+      "write once run anywhere",
+      "bytecode",
+      "classloader",
+      "memory areas",
+      "heap",
+      "stack",
+      "method area",
+      "execution engine",
+      "interpreter",
+      "jit compiler"
+    ],
+    "important_keywords": [
+      "platform",
+      "independent",
+      "wora",
+      "bytecode",
+      "classloader",
+      "memory",
+      "heap",
+      "stack",
+      "jit",
+      "compile",
+      "execute"
+    ],
+    "reference_explanation": "The JVM (Java Virtual Machine) executes Java bytecode, providing platform independence (Write Once, Run Anywhere). Its architecture includes the ClassLoader, memory areas (Heap, Stack, Method Area), and the Execution Engine featuring an interpreter and JIT compiler."
+  },
+  "Garbage Collection": {
+    "question_id": "Q_009",
+    "topic": "Garbage Collection",
+    "expected_concepts": [
+      "automatic memory management",
+      "unreachable objects",
+      "heap memory",
+      "mark and sweep",
+      "finalize method",
+      "system.gc",
+      "memory leaks",
+      "performance overhead"
+    ],
+    "important_keywords": [
+      "memory",
+      "manage",
+      "unreachable",
+      "heap",
+      "mark",
+      "sweep",
+      "finalize",
+      "gc",
+      "leak"
+    ],
+    "reference_explanation": "Garbage Collection is Java's automatic memory management that identifies and discards unreachable objects to free heap memory. The finalize() method is discouraged due to unpredictability and performance issues; modern alternatives like try-with-resources are preferred."
+  },
+  "Interfaces vs Abstract Classes": {
+    "question_id": "Q_010",
+    "topic": "Interfaces vs Abstract Classes",
+    "expected_concepts": [
+      "multiple inheritance",
+      "default methods",
+      "static methods",
+      "abstract methods",
+      "state",
+      "instance variables",
+      "constructors",
+      "is-a",
+      "can-do"
+    ],
+    "important_keywords": [
+      "multiple",
+      "inherit",
+      "default",
+      "static",
+      "abstract",
+      "state",
+      "variable",
+      "constructor",
+      "implement",
+      "extend"
+    ],
+    "reference_explanation": "Abstract classes can hold state (instance variables) and constructors, representing an 'is-a' relationship. Interfaces define a contract ('can-do'), cannot hold instance state, but support multiple inheritance and can contain default and static methods."
+  },
+  "String Pool": {
+    "question_id": "Q_011",
+    "topic": "String Pool",
+    "expected_concepts": [
+      "memory optimization",
+      "heap memory",
+      "immutable",
+      "string literal",
+      "interning",
+      "thread safe",
+      "security",
+      "caching",
+      "performance"
+    ],
+    "important_keywords": [
+      "memory",
+      "heap",
+      "immutable",
+      "literal",
+      "intern",
+      "thread",
+      "safe",
+      "cache",
+      "performance"
+    ],
+    "reference_explanation": "The String Pool is a special storage area in the Java heap. Because strings are immutable (cannot be changed after creation), the JVM caches string literals in the pool to save memory and improve performance, allowing multiple references to point to the same object."
+  },
+  "Generics": {
+    "question_id": "Q_012",
+    "topic": "Generics",
+    "expected_concepts": [
+      "type safety",
+      "compile-time checking",
+      "type casting",
+      "type erasure",
+      "reusability",
+      "collections",
+      "parameterized types",
+      "backward compatibility"
+    ],
+    "important_keywords": [
+      "type",
+      "safe",
+      "compile",
+      "cast",
+      "erasure",
+      "reuse",
+      "collection",
+      "parameter",
+      "compatible"
+    ],
+    "reference_explanation": "Generics provide compile-time type safety and eliminate the need for explicit type casting. Type erasure is a process where the Java compiler removes generic type information at compile-time to maintain backward compatibility with older Java versions."
+  },
+  "Lambda Expressions": {
+    "question_id": "Q_013",
+    "topic": "Lambda Expressions",
+    "expected_concepts": [
+      "functional interface",
+      "anonymous method",
+      "concise syntax",
+      "arrow operator",
+      "single abstract method",
+      "sam",
+      "stream api",
+      "functional programming"
+    ],
+    "important_keywords": [
+      "functional",
+      "interface",
+      "anonymous",
+      "concise",
+      "arrow",
+      "single",
+      "abstract",
+      "sam",
+      "stream"
+    ],
+    "reference_explanation": "Lambda expressions provide a clear and concise syntax to implement Functional Interfaces (interfaces with a Single Abstract Method). They enable functional programming features in Java and are heavily used with the Stream API."
+  },
+  "Stream API": {
+    "question_id": "Q_014",
+    "topic": "Stream API",
+    "expected_concepts": [
+      "functional style",
+      "declarative",
+      "collections processing",
+      "intermediate operations",
+      "terminal operations",
+      "lazy evaluation",
+      "filter",
+      "map",
+      "reduce",
+      "collect"
+    ],
+    "important_keywords": [
+      "functional",
+      "declare",
+      "collection",
+      "process",
+      "intermediate",
+      "terminal",
+      "lazy",
+      "filter",
+      "map",
+      "reduce"
+    ],
+    "reference_explanation": "The Stream API enables functional-style, declarative operations on collections. Intermediate operations (like filter, map) return a new stream and are lazily evaluated. Terminal operations (like collect, reduce) trigger the processing pipeline and produce a result."
+  },
+  "Optional Class": {
+    "question_id": "Q_015",
+    "topic": "Optional Class",
+    "expected_concepts": [
+      "nullpointerexception",
+      "npe",
+      "container object",
+      "value presence",
+      "avoid null checks",
+      "functional methods",
+      "ofnullable",
+      "ifpresent",
+      "orelse"
+    ],
+    "important_keywords": [
+      "nullpointerexception",
+      "npe",
+      "container",
+      "presence",
+      "null",
+      "check",
+      "functional",
+      "present"
+    ],
+    "reference_explanation": "The Optional class is a container object used to represent the presence or absence of a value. It was introduced to avoid verbose null checks and prevent NullPointerExceptions by providing functional methods like ifPresent() and orElse()."
+  },
+  "Concurrency vs Parallelism": {
+    "question_id": "Q_016",
+    "topic": "Concurrency vs Parallelism",
+    "expected_concepts": [
+      "concurrency",
+      "parallelism",
+      "multiple tasks making progress",
+      "tasks executing simultaneously",
+      "threads",
+      "executors",
+      "multiple processor cores",
+      "fork join framework",
+      "java.util.concurrent",
+      "subtasks",
+      "interleaving"
+    ],
+    "important_keywords": [
+      "concurren",
+      "parallel",
+      "task",
+      "progress",
+      "simultaneous",
+      "thread",
+      "executor",
+      "core",
+      "fork",
+      "join"
+    ],
+    "reference_explanation": "Concurrency is about structure\u2014managing multiple tasks making progress at the same time (interleaving). Parallelism is about execution\u2014running tasks simultaneously on multiple processor cores. The Fork/Join framework divides large tasks into subtasks to execute them in parallel across cores."
+  },
+  "Synchronization": {
+    "question_id": "Q_017",
+    "topic": "Synchronization",
+    "expected_concepts": [
+      "thread safety",
+      "mutual exclusion",
+      "monitor lock",
+      "race condition",
+      "synchronized block",
+      "synchronized method",
+      "deadlock",
+      "resource contention",
+      "circular wait"
+    ],
+    "important_keywords": [
+      "thread",
+      "safe",
+      "mutual",
+      "monitor",
+      "lock",
+      "race",
+      "synchronize",
+      "deadlock",
+      "resource"
+    ],
+    "reference_explanation": "The 'synchronized' keyword ensures thread safety by allowing only one thread to access a block or method at a time using a monitor lock, preventing race conditions. Deadlock occurs when threads wait on each other cyclically; it can be prevented by ordered lock acquisition."
+  },
+  "Volatile Keyword": {
+    "question_id": "Q_018",
+    "topic": "Volatile Keyword",
+    "expected_concepts": [
+      "visibility",
+      "main memory",
+      "cpu cache",
+      "thread safety",
+      "atomicity",
+      "happens-before",
+      "synchronization alternative"
+    ],
+    "important_keywords": [
+      "visible",
+      "main",
+      "memory",
+      "cache",
+      "thread",
+      "safe",
+      "atomic",
+      "synchronize"
+    ],
+    "reference_explanation": "The 'volatile' keyword ensures visibility of variable changes across threads by forcing reads and writes directly to main memory rather than CPU caches. Unlike 'synchronized', it does not provide atomicity or mutual exclusion."
+  },
+  "Static Keyword": {
+    "question_id": "Q_019",
+    "topic": "Static Keyword",
+    "expected_concepts": [
+      "class level",
+      "memory allocation",
+      "instance independent",
+      "static variables",
+      "static methods",
+      "utility methods",
+      "object creation",
+      "this keyword"
+    ],
+    "important_keywords": [
+      "class",
+      "memory",
+      "instance",
+      "independent",
+      "variable",
+      "method",
+      "utility",
+      "object"
+    ],
+    "reference_explanation": "The 'static' keyword binds a variable or method to the class itself rather than to instances. Static methods cannot directly access non-static instance variables because they run without an object context and have no 'this' reference."
+  },
+  "Final Keyword": {
+    "question_id": "Q_020",
+    "topic": "Final Keyword",
+    "expected_concepts": [
+      "immutability",
+      "constants",
+      "prevent overriding",
+      "prevent inheritance",
+      "final variable",
+      "final method",
+      "final class",
+      "security",
+      "design"
+    ],
+    "important_keywords": [
+      "immutable",
+      "constant",
+      "prevent",
+      "override",
+      "inherit",
+      "variable",
+      "method",
+      "class",
+      "secure"
+    ],
+    "reference_explanation": "The 'final' keyword restricts modification. A final variable becomes a constant. A final method cannot be overridden by subclasses. A final class cannot be inherited, which is useful for security and immutable designs like the String class."
+  },
+  "Constructors": {
+    "question_id": "Q_021",
+    "topic": "Constructors",
+    "expected_concepts": [
+      "object initialization",
+      "no return type",
+      "same name as class",
+      "default constructor",
+      "parameterized constructor",
+      "constructor overloading",
+      "this keyword",
+      "constructor chaining"
+    ],
+    "important_keywords": [
+      "object",
+      "initialize",
+      "return",
+      "name",
+      "default",
+      "parameter",
+      "overload",
+      "chain",
+      "this"
+    ],
+    "reference_explanation": "A constructor is a special block of code that initializes a newly created object. Constructor overloading provides multiple ways to instantiate a class. The 'this()' keyword is used to call another constructor in the same class (constructor chaining)."
+  },
+  "Method Overloading vs Overriding": {
+    "question_id": "Q_022",
+    "topic": "Method Overloading vs Overriding",
+    "expected_concepts": [
+      "compile-time polymorphism",
+      "runtime polymorphism",
+      "same method name",
+      "different parameters",
+      "same signature",
+      "inheritance",
+      "static binding",
+      "dynamic binding",
+      "private methods"
+    ],
+    "important_keywords": [
+      "compile",
+      "runtime",
+      "polymorph",
+      "name",
+      "parameter",
+      "signature",
+      "inherit",
+      "bind",
+      "private"
+    ],
+    "reference_explanation": "Overloading occurs in the same class with different parameters (compile-time polymorphism). Overriding occurs in a subclass with the same signature (runtime polymorphism). Private methods cannot be overridden because they are not visible to subclasses."
+  },
+  "Super Keyword": {
+    "question_id": "Q_023",
+    "topic": "Super Keyword",
+    "expected_concepts": [
+      "parent class",
+      "superclass reference",
+      "invoke parent constructor",
+      "access hidden fields",
+      "override methods",
+      "inheritance hierarchy",
+      "constructor chaining"
+    ],
+    "important_keywords": [
+      "parent",
+      "super",
+      "reference",
+      "invoke",
+      "constructor",
+      "hide",
+      "override",
+      "inherit",
+      "chain"
+    ],
+    "reference_explanation": "The 'super' keyword refers to the immediate parent class object. It is used to access hidden fields, invoke overridden parent methods, and, via 'super()', explicitly call a parent class constructor during subclass instantiation."
+  },
+  "Wrapper Classes": {
+    "question_id": "Q_024",
+    "topic": "Wrapper Classes",
+    "expected_concepts": [
+      "primitive types",
+      "object representation",
+      "collections",
+      "generics",
+      "autoboxing",
+      "unboxing",
+      "automatic conversion",
+      "utility methods"
+    ],
+    "important_keywords": [
+      "primitive",
+      "object",
+      "collection",
+      "generic",
+      "autobox",
+      "unbox",
+      "automatic",
+      "convert",
+      "utility"
+    ],
+    "reference_explanation": "Wrapper classes convert primitive data types into objects, required for Java Collections and Generics. Autoboxing is the automatic conversion of a primitive to its wrapper object, while unboxing is the reverse process."
+  },
+  "Serialization": {
+    "question_id": "Q_025",
+    "topic": "Serialization",
+    "expected_concepts": [
+      "byte stream",
+      "network transmission",
+      "file storage",
+      "serializable interface",
+      "transient keyword",
+      "sensitive data",
+      "deserialization",
+      "object state"
+    ],
+    "important_keywords": [
+      "byte",
+      "stream",
+      "network",
+      "file",
+      "serial",
+      "transient",
+      "sensitive",
+      "deserial",
+      "state"
+    ],
+    "reference_explanation": "Serialization converts an object's state into a byte stream for storage or network transmission. The 'transient' keyword marks fields (like passwords) that should be ignored during serialization to protect sensitive data or skip non-serializable references."
+  },
+  "Cloning": {
+    "question_id": "Q_026",
+    "topic": "Cloning",
+    "expected_concepts": [
+      "object copy",
+      "cloneable interface",
+      "clone method",
+      "shallow copy",
+      "deep copy",
+      "reference copy",
+      "independent objects",
+      "mutable fields"
+    ],
+    "important_keywords": [
+      "copy",
+      "clone",
+      "shallow",
+      "deep",
+      "reference",
+      "independent",
+      "mutable"
+    ],
+    "reference_explanation": "Cloning creates a copy of an object. A shallow copy copies primitive values but shares references for mutable objects. A deep copy creates entirely new copies of all referenced mutable objects, ensuring total independence."
+  },
+  "ClassLoaders": {
+    "question_id": "Q_027",
+    "topic": "ClassLoaders",
+    "expected_concepts": [
+      "jvm subsystem",
+      "dynamic loading",
+      "bootstrap classloader",
+      "extension classloader",
+      "application classloader",
+      "system classloader",
+      "delegation model",
+      "bytecode"
+    ],
+    "important_keywords": [
+      "jvm",
+      "dynamic",
+      "load",
+      "bootstrap",
+      "extension",
+      "application",
+      "system",
+      "delegate",
+      "bytecode"
+    ],
+    "reference_explanation": "A ClassLoader is a JVM subsystem that dynamically loads Java classes into memory. The JVM uses three primary built-in loaders: the Bootstrap ClassLoader (core libraries), the Extension ClassLoader, and the Application/System ClassLoader (classpath files)."
+  },
+  "Reflection API": {
+    "question_id": "Q_028",
+    "topic": "Reflection API",
+    "expected_concepts": [
+      "runtime inspection",
+      "metadata",
+      "dynamic invocation",
+      "private access",
+      "frameworks",
+      "spring",
+      "hibernate",
+      "performance overhead",
+      "security risks"
+    ],
+    "important_keywords": [
+      "runtime",
+      "inspect",
+      "metadata",
+      "dynamic",
+      "invoke",
+      "private",
+      "framework",
+      "performance",
+      "secure"
+    ],
+    "reference_explanation": "Reflection allows inspection and modification of classes, methods, and fields at runtime, enabling frameworks like Spring to instantiate objects dynamically. However, it incurs performance overhead and bypasses security/access checks (like accessing private fields)."
+  },
+  "Annotations": {
+    "question_id": "Q_029",
+    "topic": "Annotations",
+    "expected_concepts": [
+      "metadata",
+      "compiler instructions",
+      "runtime processing",
+      "built-in annotations",
+      "override",
+      "deprecated",
+      "custom annotations",
+      "retention policy",
+      "target"
+    ],
+    "important_keywords": [
+      "metadata",
+      "compiler",
+      "runtime",
+      "built",
+      "override",
+      "deprecate",
+      "custom",
+      "retention",
+      "target"
+    ],
+    "reference_explanation": "Annotations provide metadata about the code. Built-in annotations (@Override, @Deprecated) give instructions to the compiler. Custom annotations are defined by developers and processed at compile-time or runtime using reflection."
+  },
+  "Enums": {
+    "question_id": "Q_030",
+    "topic": "Enums",
+    "expected_concepts": [
+      "named constants",
+      "type safety",
+      "singleton",
+      "fields",
+      "methods",
+      "constructors",
+      "switch statements",
+      "iteration"
+    ],
+    "important_keywords": [
+      "constant",
+      "type",
+      "safe",
+      "singleton",
+      "field",
+      "method",
+      "constructor",
+      "switch",
+      "iterate"
+    ],
+    "reference_explanation": "An Enum defines a fixed set of named constants, providing type safety. Unlike simple constants, Java enums are full classes; they can have custom fields, methods, and private constructors to initialize state for each constant."
+  },
+  "Memory Leaks": {
+    "question_id": "Q_031",
+    "topic": "Memory Leaks",
+    "expected_concepts": [
+      "unreachable objects",
+      "garbage collector",
+      "unintended references",
+      "static collections",
+      "unclosed resources",
+      "listeners",
+      "caches",
+      "out of memory"
+    ],
+    "important_keywords": [
+      "unreachable",
+      "garbage",
+      "reference",
+      "static",
+      "collection",
+      "resource",
+      "listener",
+      "cache",
+      "memory"
+    ],
+    "reference_explanation": "Memory leaks occur in Java when the Garbage Collector cannot free objects because unintended strong references still point to them. Common causes include static collections growing indefinitely, unclosed streams, or forgotten event listeners."
+  },
+  "Comparable vs Comparator": {
+    "question_id": "Q_032",
+    "topic": "Comparable vs Comparator",
+    "expected_concepts": [
+      "sorting",
+      "natural ordering",
+      "comparable interface",
+      "compareto method",
+      "custom ordering",
+      "comparator interface",
+      "compare method",
+      "multiple sort sequences",
+      "modifying source"
+    ],
+    "important_keywords": [
+      "sort",
+      "natural",
+      "order",
+      "comparable",
+      "compare",
+      "custom",
+      "comparator",
+      "multiple",
+      "modify"
+    ],
+    "reference_explanation": "Comparable (compareTo) defines the default, natural sorting order within the class itself. Comparator (compare) is implemented externally to provide multiple, custom sorting sequences without modifying the original class source code."
+  },
+  "Hashcode and Equals": {
+    "question_id": "Q_033",
+    "topic": "Hashcode and Equals",
+    "expected_concepts": [
+      "object equality",
+      "hash based collections",
+      "hashmap",
+      "hashset",
+      "contract",
+      "buckets",
+      "memory address",
+      "collisions",
+      "data retrieval"
+    ],
+    "important_keywords": [
+      "equal",
+      "hash",
+      "collection",
+      "contract",
+      "bucket",
+      "memory",
+      "collision",
+      "retrieve"
+    ],
+    "reference_explanation": "The contract states that if two objects are equal according to equals(), they must have the same hashCode(). If you override equals() but not hashCode(), equal objects will hash to different buckets, breaking collections like HashMap and HashSet."
+  },
+  "Default Methods": {
+    "question_id": "Q_034",
+    "topic": "Default Methods",
+    "expected_concepts": [
+      "interfaces",
+      "backward compatibility",
+      "method implementation",
+      "multiple inheritance",
+      "diamond problem",
+      "override",
+      "super keyword"
+    ],
+    "important_keywords": [
+      "interface",
+      "backward",
+      "compatible",
+      "implement",
+      "multiple",
+      "inherit",
+      "diamond",
+      "override"
+    ],
+    "reference_explanation": "Default methods allow interfaces to have concrete implementations, providing backward compatibility for existing interfaces (like Collection). If a class inherits conflicting default methods (the diamond problem), it must explicitly override the method and specify which to use."
+  },
+  "Type Inference": {
+    "question_id": "Q_035",
+    "topic": "Type Inference",
+    "expected_concepts": [
+      "compiler deduction",
+      "var keyword",
+      "local variable type inference",
+      "java 10",
+      "readability",
+      "diamond operator",
+      "compile time"
+    ],
+    "important_keywords": [
+      "compile",
+      "deduce",
+      "var",
+      "local",
+      "variable",
+      "infer",
+      "read",
+      "diamond",
+      "time"
+    ],
+    "reference_explanation": "Type inference allows the compiler to deduce the type of a variable from its context. The 'var' keyword (Java 10) enables local variable type inference, reducing verbosity and improving readability without sacrificing compile-time static typing."
+  },
+  "Records": {
+    "question_id": "Q_036",
+    "topic": "Records",
+    "expected_concepts": [
+      "data carrier",
+      "immutable",
+      "boilerplate",
+      "pojo",
+      "implicit constructor",
+      "getters",
+      "equals",
+      "hashcode",
+      "tostring",
+      "java 14"
+    ],
+    "important_keywords": [
+      "data",
+      "immutable",
+      "boilerplate",
+      "pojo",
+      "implicit",
+      "constructor",
+      "getter",
+      "equal",
+      "hash",
+      "string"
+    ],
+    "reference_explanation": "Records (Java 14+) are immutable data carrier classes that automatically generate boilerplate code (constructors, getters, equals, hashCode, toString). This drastically reduces the verbosity compared to traditional POJOs."
+  },
+  "Sealed Classes": {
+    "question_id": "Q_037",
+    "topic": "Sealed Classes",
+    "expected_concepts": [
+      "inheritance control",
+      "domain modeling",
+      "permits keyword",
+      "exhaustiveness",
+      "pattern matching",
+      "security",
+      "api design"
+    ],
+    "important_keywords": [
+      "inherit",
+      "control",
+      "domain",
+      "model",
+      "permit",
+      "exhaustive",
+      "pattern",
+      "match",
+      "secure",
+      "api"
+    ],
+    "reference_explanation": "Sealed classes restrict which other classes or interfaces may extend or implement them using the 'permits' keyword. This provides strict control over inheritance hierarchies, improves API design security, and enables exhaustive pattern matching."
+  },
+  "Pattern Matching": {
+    "question_id": "Q_038",
+    "topic": "Pattern Matching",
+    "expected_concepts": [
+      "instanceof",
+      "type casting",
+      "readability",
+      "boilerplate reduction",
+      "scope",
+      "binding variable",
+      "switch expressions",
+      "safety"
+    ],
+    "important_keywords": [
+      "instanceof",
+      "cast",
+      "read",
+      "boilerplate",
+      "scope",
+      "bind",
+      "variable",
+      "switch",
+      "safe"
+    ],
+    "reference_explanation": "Pattern matching for 'instanceof' simplifies type checking and casting by extracting the object into a binding variable in one step. This eliminates redundant cast boilerplate, improving code readability and type safety."
+  },
+  "JDBC": {
+    "question_id": "Q_039",
+    "topic": "JDBC",
+    "expected_concepts": [
+      "database connectivity",
+      "sql execution",
+      "driver manager",
+      "connection",
+      "statement",
+      "preparedstatement",
+      "sql injection",
+      "precompiled",
+      "performance"
+    ],
+    "important_keywords": [
+      "database",
+      "sql",
+      "driver",
+      "connect",
+      "statement",
+      "prepare",
+      "inject",
+      "precompile",
+      "performance"
+    ],
+    "reference_explanation": "JDBC enables Java applications to connect and execute SQL on databases. PreparedStatement is preferred over Statement because it is precompiled (improving performance) and uses parameterized queries, which prevents SQL injection attacks."
+  },
+  "Design Patterns (Singleton)": {
+    "question_id": "Q_040",
+    "topic": "Design Patterns (Singleton)",
+    "expected_concepts": [
+      "creational pattern",
+      "single instance",
+      "global access",
+      "private constructor",
+      "static method",
+      "thread safe",
+      "double checked locking",
+      "enum singleton"
+    ],
+    "important_keywords": [
+      "create",
+      "single",
+      "instance",
+      "global",
+      "access",
+      "private",
+      "constructor",
+      "static",
+      "thread",
+      "safe",
+      "lock",
+      "enum"
+    ],
+    "reference_explanation": "The Singleton pattern ensures a class has only one instance and provides a global point of access. In Java, thread safety can be achieved using double-checked locking with the volatile keyword, or simply by using an Enum."
+  },
+  "Design Patterns (Factory)": {
+    "question_id": "Q_041",
+    "topic": "Design Patterns (Factory)",
+    "expected_concepts": [
+      "creational pattern",
+      "object creation",
+      "hide instantiation logic",
+      "interfaces",
+      "subclasses",
+      "loose coupling",
+      "flexibility"
+    ],
+    "important_keywords": [
+      "create",
+      "object",
+      "hide",
+      "instantiate",
+      "interface",
+      "subclass",
+      "loose",
+      "couple",
+      "flexible"
+    ],
+    "reference_explanation": "The Factory pattern provides an interface for creating objects in a superclass, allowing subclasses to alter the type of objects created. It is used over simple constructors to hide instantiation logic and promote loose coupling."
+  },
+  "Design Patterns (Observer)": {
+    "question_id": "Q_042",
+    "topic": "Design Patterns (Observer)",
+    "expected_concepts": [
+      "behavioral pattern",
+      "one-to-many relationship",
+      "publish subscribe",
+      "subject",
+      "state change",
+      "event listeners",
+      "gui",
+      "mvc"
+    ],
+    "important_keywords": [
+      "behavior",
+      "relationship",
+      "publish",
+      "subscribe",
+      "subject",
+      "state",
+      "event",
+      "listener",
+      "gui",
+      "mvc"
+    ],
+    "reference_explanation": "The Observer pattern defines a one-to-many dependency where state changes in a Subject automatically notify multiple Observers. Real-world examples include GUI event listeners (button clicks) or Model-View-Controller (MVC) architectures."
+  },
+  "SOLID Principles": {
+    "question_id": "Q_043",
+    "topic": "SOLID Principles",
+    "expected_concepts": [
+      "single responsibility",
+      "open closed",
+      "liskov substitution",
+      "interface segregation",
+      "dependency inversion",
+      "maintainability",
+      "one reason to change",
+      "cohesion"
+    ],
+    "important_keywords": [
+      "single",
+      "responsible",
+      "open",
+      "close",
+      "liskov",
+      "substitute",
+      "interface",
+      "segregate",
+      "dependency",
+      "invert",
+      "maintain"
+    ],
+    "reference_explanation": "SOLID principles promote maintainable object-oriented design. The Single Responsibility Principle (SRP) dictates that a class should have only one reason to change, meaning it should encapsulate exactly one focused responsibility or functionality."
+  },
+  "Dependency Injection": {
+    "question_id": "Q_044",
+    "topic": "Dependency Injection",
+    "expected_concepts": [
+      "inversion of control",
+      "ioc",
+      "loose coupling",
+      "testability",
+      "constructor injection",
+      "setter injection",
+      "spring framework",
+      "external configuration"
+    ],
+    "important_keywords": [
+      "invert",
+      "control",
+      "ioc",
+      "loose",
+      "couple",
+      "test",
+      "constructor",
+      "inject",
+      "setter",
+      "spring",
+      "external"
+    ],
+    "reference_explanation": "Dependency Injection (DI) is a technique where an object receives its dependencies from an external source rather than creating them itself. This promotes loose coupling, making code easier to test, maintain, and configure."
+  },
+  "Unit Testing": {
+    "question_id": "Q_045",
+    "topic": "Unit Testing",
+    "expected_concepts": [
+      "junit",
+      "test isolation",
+      "code quality",
+      "regression",
+      "mocking",
+      "mockito",
+      "stubbing",
+      "dependencies",
+      "behavior verification"
+    ],
+    "important_keywords": [
+      "junit",
+      "test",
+      "isolate",
+      "quality",
+      "regression",
+      "mock",
+      "mockito",
+      "stub",
+      "dependency",
+      "behavior"
+    ],
+    "reference_explanation": "Unit testing verifies individual components in isolation to ensure code quality and prevent regressions. Mocking frameworks like Mockito create fake objects (mocks) for external dependencies, allowing developers to test logic without touching actual databases or APIs."
+  },
+  "Build Tools": {
+    "question_id": "Q_046",
+    "topic": "Build Tools",
+    "expected_concepts": [
+      "maven",
+      "gradle",
+      "automation",
+      "dependency management",
+      "pom.xml",
+      "transitive dependencies",
+      "repositories",
+      "build lifecycle",
+      "compile package deploy"
+    ],
+    "important_keywords": [
+      "maven",
+      "gradle",
+      "automate",
+      "dependency",
+      "manage",
+      "pom",
+      "transitive",
+      "repository",
+      "build",
+      "lifecycle"
+    ],
+    "reference_explanation": "Build tools like Maven automate compilation, testing, and packaging. Maven's dependency management handles fetching external libraries (and their transitive dependencies) via the pom.xml file, ensuring consistent builds across environments."
+  },
+  "REST APIs": {
+    "question_id": "Q_047",
+    "topic": "REST APIs",
+    "expected_concepts": [
+      "representational state transfer",
+      "http protocol",
+      "stateless",
+      "json",
+      "endpoints",
+      "get",
+      "post",
+      "put",
+      "delete",
+      "spring boot",
+      "jax-rs"
+    ],
+    "important_keywords": [
+      "represent",
+      "state",
+      "transfer",
+      "http",
+      "stateless",
+      "json",
+      "endpoint",
+      "get",
+      "post",
+      "put",
+      "delete",
+      "spring"
+    ],
+    "reference_explanation": "REST APIs expose resources over HTTP using standard methods in a stateless manner. Common HTTP methods include GET (retrieve), POST (create), PUT (update), and DELETE (remove). Java commonly implements them using Spring Boot or JAX-RS."
+  },
+  "Spring Framework": {
+    "question_id": "Q_048",
+    "topic": "Spring Framework",
+    "expected_concepts": [
+      "enterprise java",
+      "inversion of control",
+      "ioc container",
+      "dependency injection",
+      "application context",
+      "beans",
+      "loose coupling",
+      "spring boot",
+      "auto-configuration"
+    ],
+    "important_keywords": [
+      "enterprise",
+      "java",
+      "invert",
+      "control",
+      "ioc",
+      "container",
+      "dependency",
+      "inject",
+      "context",
+      "bean",
+      "loose"
+    ],
+    "reference_explanation": "Spring is a comprehensive enterprise framework. Inversion of Control (IoC) means the Spring container takes control of creating and managing objects (Beans) and injecting their dependencies, removing that responsibility from the application code."
+  },
+  "Microservices": {
+    "question_id": "Q_049",
+    "topic": "Microservices",
+    "expected_concepts": [
+      "architectural style",
+      "independent deployment",
+      "domain driven design",
+      "scalability",
+      "spring boot",
+      "distributed systems",
+      "complexity",
+      "network latency",
+      "api gateway"
+    ],
+    "important_keywords": [
+      "architecture",
+      "independent",
+      "deploy",
+      "domain",
+      "scale",
+      "spring",
+      "distribute",
+      "complex",
+      "network",
+      "api"
+    ],
+    "reference_explanation": "Microservices architecture breaks down a monolith into small, independently deployable services around business domains. Benefits include targeted scalability and technology flexibility, while challenges include distributed system complexity and network latency."
+  },
+  "JPA / Hibernate": {
+    "question_id": "Q_050",
+    "topic": "JPA / Hibernate",
+    "expected_concepts": [
+      "java persistence api",
+      "orm",
+      "object relational mapping",
+      "hibernate",
+      "entity manager",
+      "transient state",
+      "persistent state",
+      "detached state",
+      "database sync"
+    ],
+    "important_keywords": [
+      "java",
+      "persist",
+      "api",
+      "orm",
+      "object",
+      "relation",
+      "map",
+      "hibernate",
+      "entity",
+      "transient",
+      "persistent",
+      "detach"
+    ],
+    "reference_explanation": "JPA is the specification for ORM (Object-Relational Mapping), and Hibernate is its popular implementation. A transient entity is new and unmanaged; a persistent entity is managed by the EntityManager and synced to the DB; a detached entity was managed but its session closed."
+  }
+}

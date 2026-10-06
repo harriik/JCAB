@@ -80,10 +80,10 @@ def generate_synthetic_data():
                 "followup_question": q['followup'],
                 "followup_response": followup_resp,
                 "predicted_score": score,
-                "predicted_learner_level": level,
+                "learner_level": level,
                 "feedback_mode": "Synthetic Multi-Agent LLM Simulation",
                 "generated_feedback": feedback,
-                "recommended_learning_action": action
+                "recommendation": action
             })
             
         # 1 rating per participant (usually at end of session)

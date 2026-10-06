@@ -47,7 +47,8 @@ def run_latency_test():
         print(f"\nModel Used: {latencies.get('model_used', 'Unknown')}")
         
         total_requests = latencies.get('total_requests', 4)
-        print(f"Total API Requests: {total_requests} (Retries: {total_requests - 4})")
+        total_retries = latencies.get('total_retries', 0)
+        print(f"Total API Requests: {total_requests} (Retries: {total_retries})")
         
         print(f"\nAgent 1 Latency: {latencies.get('agent_1_sec', 0.0)}s")
         print(f"Agent 2 Latency: {latencies.get('agent_2_sec', 0.0)}s")

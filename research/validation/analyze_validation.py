@@ -2,17 +2,33 @@ import pandas as pd
 from pathlib import Path
 import json
 
-def analyze_validation():
-    val_dir = Path("d:/JCAB/research/validation")
+import sys
+
+def analyze_validation(dir_path="d:/JCAB/research/validation"):
+    val_dir = Path(dir_path)
     raw_csv = val_dir / "student_validation_raw.csv"
     survey_csv = val_dir / "student_feedback_ratings.csv"
     
+    # If using synthetic, filenames are different
+    if "synthetic" in str(val_dir):
+        raw_csv = val_dir / "synthetic_student_validation_raw.csv"
+        survey_csv = val_dir / "synthetic_student_feedback_ratings.csv"
+    
     if not raw_csv.exists() or not survey_csv.exists():
-        print("Validation data not found. Ensure pilot data is collected first.")
+        print(f"Validation data not found in {val_dir}. Ensure pilot data is collected first.")
         return
         
-    df_raw = pd.read_csv(raw_csv)
-    df_survey = pd.read_csv(survey_csv)
+    try:
+        df_raw = pd.read_csv(raw_csv)
+    except Exception as e:
+        print(f"Error reading raw CSV: {e}")
+        return
+        
+    try:
+        df_survey = pd.read_csv(survey_csv)
+    except Exception as e:
+        print(f"Error reading survey CSV: {e}")
+        return
     
     participants = df_survey['participant_id'].nunique()
     assessments = len(df_raw)
@@ -77,4 +93,7 @@ def analyze_validation():
         print(f"- {c}")
 
 if __name__ == "__main__":
-    analyze_validation()
+    if len(sys.argv) > 1:
+        analyze_validation(sys.argv[1])
+    else:
+        analyze_validation()

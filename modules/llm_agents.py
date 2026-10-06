@@ -53,12 +53,13 @@ class LLMProvider:
     
     _last_request_time = 0.0
     _total_requests = 0
+    _total_retries = 0
     _working_model = None
 
     def __init__(self):
         self.provider = os.environ.get("LLM_PROVIDER", "gemini").lower()
         self.api_key = os.environ.get("LLM_API_KEY", "")
-        self.model = os.environ.get("LLM_MODEL", "gemini-3.5-flash")
+        self.model = os.environ.get("LLM_MODEL", "gemini-3.5-flash-lite")
         
         if not self.api_key:
             raise ValueError("LLM_API_KEY environment variable is not set.")
@@ -66,7 +67,7 @@ class LLMProvider:
         if self.provider == "gemini":
             from google import genai
             from google.genai import types
-            self.client = genai.Client(api_key=self.api_key, http_options={'timeout': 45.0})
+            self.client = genai.Client(api_key=self.api_key, http_options={'timeout': 60000.0})
             self.types = types
             # Static fallback list to avoid unnecessary API calls during initialization
             fallback_models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
@@ -104,12 +105,13 @@ class LLMProvider:
                     )
                 )
                 
-                for attempt in [1, 2, 3]:
+                for attempt in [1, 2, 3, 4]:
                     # Adaptive rate limit: 4 seconds between requests (15 RPM free tier limit)
                     now = time.time()
                     elapsed = now - LLMProvider._last_request_time
                     if elapsed < 4.0:
                         wait_time = 4.0 - elapsed
+                        logger.info(f"Adaptive rate limit: Waiting {wait_time:.2f}s before next request.")
                         time.sleep(wait_time)
                     
                     LLMProvider._last_request_time = time.time()
@@ -129,39 +131,63 @@ class LLMProvider:
                     except Exception as e:
                         err_str = str(e).lower()
                         last_err = e
-                        if "503" in err_str or "502" in err_str or "504" in err_str or "unavailable" in err_str or "timeout" in err_str or "timed out" in err_str or "connection" in err_str or "winerror" in err_str:
-                            if attempt < 3:
+                        
+                        # Network Errors
+                        if "timeout" in err_str or "timed out" in err_str or "connection" in err_str or "winerror" in err_str or "getaddrinfo" in err_str or "ssl" in err_str:
+                            if attempt < 4:
+                                logger.warning(f"Network error on {candidate_model}. Retry {attempt}/3 without switching model.")
+                                LLMProvider._total_retries += 1
+                                time.sleep(2.0)  # Short wait for network blip
+                                continue
+                            else:
+                                logger.error(f"Network error on {candidate_model} persisted. Stopping failover chain.")
+                                raise e # Do not failover for general network issues
+                        
+                        # Quota Errors (429)
+                        elif "429" in err_str or "quota" in err_str or "resource_exhausted" in err_str:
+                            if attempt < 4:
+                                backoff = 2 ** attempt  # 2s, 4s, 8s
+                                logger.warning(f"Quota exhausted (429) on {candidate_model}. Waiting {backoff}s...")
+                                LLMProvider._total_retries += 1
+                                time.sleep(backoff)
+                                continue
+                            else:
+                                logger.error(f"Quota exhausted on {candidate_model} permanently. Stopping failover chain.")
+                                raise e
+                                
+                        # Transient Server Errors (50x)
+                        elif "503" in err_str or "502" in err_str or "504" in err_str or "500" in err_str or "unavailable" in err_str or "high demand" in err_str:
+                            if attempt < 4:
                                 backoff = 2 ** attempt
-                                logger.warning(f"API Error (network/capacity) on {candidate_model}. Waiting {backoff}s...")
+                                logger.warning(f"Transient server error (50x) on {candidate_model}. Waiting {backoff}s...")
+                                LLMProvider._total_retries += 1
                                 time.sleep(backoff)
                                 continue
                             else:
                                 logger.error(f"Model {candidate_model} is unavailable. Stopping failover chain.")
-                                raise e # Do not failover for general network/gateway issues
-                        elif "429" in err_str or "resource_exhausted" in err_str:
-                            if attempt < 3:
-                                backoff = 4 ** attempt  # longer exponential backoff for 429
-                                logger.warning(f"Quota exhausted on {candidate_model}. Waiting {backoff}s...")
-                                time.sleep(backoff)
-                                continue
-                            else:
-                                logger.error(f"Model {candidate_model} quota exhausted permanently. Stopping failover chain.")
-                                raise e # Do not failover for quota exhaustion
+                                raise e
+                                
+                        # Model Errors (404/400)
                         elif "404" in err_str or "not_found" in err_str:
-                            logger.warning(f"Model {candidate_model} not found. Failing over to next model.")
+                            logger.warning(f"Model {candidate_model} not found (404). Failing over to next model.")
                             break # Move to next model immediately
                         elif "400" in err_str:
                             if "not supported" in err_str or "modalities" in err_str:
-                                logger.warning(f"Model {candidate_model} is incompatible. Failing over.")
+                                logger.warning(f"Model {candidate_model} is incompatible (400). Failing over.")
                                 break # Move to next model immediately
                             else:
                                 raise e # other 400 error
+                                
+                        # Auth Errors (401/403)
                         elif "401" in err_str or "403" in err_str:
+                            logger.error(f"Authentication/Configuration error ({err_str}).")
                             raise e # fatal auth/config error
+                            
+                        # Unknown Errors
                         else:
                             raise e
             
-            raise Exception(f"All candidate models failed. Last error: {last_err}")
+            raise Exception(f"All candidate models failed or unavailable. Last error: {last_err}")
 
 
 def _agent_1_analyzer(provider: LLMProvider, context: Dict[str, Any]) -> Agent1Analysis:
@@ -170,14 +196,15 @@ def _agent_1_analyzer(provider: LLMProvider, context: Dict[str, Any]) -> Agent1A
     Task: Analyze the student's conceptual understanding based on their responses.
     DO NOT change or evaluate the predicted score. The score is authoritative.
     
-    Context:
     - Topic: {context['topic']}
     - Question 1: {context['question']}
     - Student Response 1: {context['initial_response']}
     - Question 2: {context['followup_question']}
     - Student Response 2: {context['followup_response']}
-    - XGBoost Predicted Score: {context['score']}/10
+    - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
+    - Detected Strengths: {context['strengths']}
+    - Missing Concepts: {context['missing_concepts']}
     
     Provide your structured analysis.
     """
@@ -192,7 +219,7 @@ def _agent_2_feedback(provider: LLMProvider, context: Dict[str, Any], a1_out: Ag
     - Topic: {context['topic']}
     - Original Question: {context['question']}
     - Student Response: {context['initial_response']}
-    - XGBoost Predicted Score: {context['score']}/10
+    - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
     
     Agent 1 Analysis:
@@ -210,7 +237,7 @@ def _agent_3_recommendation(provider: LLMProvider, context: Dict[str, Any], a1_o
     
     Context:
     - Topic: {context['topic']}
-    - XGBoost Score: {context['score']}/10
+    - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
     
     Agent 1 Analysis: {a1_out.model_dump_json()}
@@ -227,7 +254,7 @@ def _agent_4_coordinator(provider: LLMProvider, context: Dict[str, Any], a1_out:
     DO NOT introduce new claims unsupported by the previous agents or student responses.
     
     Context:
-    - XGBoost Score: {context['score']}/10
+    - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
     
     Agent 1 (Analysis): {a1_out.model_dump_json()}
@@ -244,9 +271,8 @@ def run_multi_agent_feedback(
     initial_response: str,
     followup_question: str,
     followup_response: str,
-    score: float,
-    learner_level: str,
     topic: str,
+    auth_assessment: Dict[str, Any],
     progress_callback=None
 ) -> Dict[str, Any]:
     """
@@ -260,8 +286,10 @@ def run_multi_agent_feedback(
         "initial_response": initial_response,
         "followup_question": followup_question,
         "followup_response": followup_response,
-        "score": score,
-        "learner_level": learner_level,
+        "score": auth_assessment["score"],
+        "learner_level": auth_assessment["learner_level"],
+        "strengths": auth_assessment.get("strengths", []),
+        "missing_concepts": auth_assessment.get("missing_concepts", []),
         "topic": topic
     }
     
@@ -307,6 +335,7 @@ def run_multi_agent_feedback(
     latencies['total_llm_sec'] = total_time
     latencies['model_used'] = LLMProvider._working_model or provider.model
     latencies['total_requests'] = LLMProvider._total_requests
+    latencies['total_retries'] = LLMProvider._total_retries
     
     logger.info(f"Agent 4 (Coordinator) complete in {latencies['agent_4_sec']}s. Total time: {total_time}s.")
     

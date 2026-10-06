@@ -6,4 +6,6 @@ xgboost==1.7.6
 scikit-learn>=1.0.0
 joblib>=1.2.0
 setuptools<81
-SpeechRecognition>=3.10.0
+faster-whisper>=1.0.0
+soundfile>=0.12.0
+streamlit-mic-recorder

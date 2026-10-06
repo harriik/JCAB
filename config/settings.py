@@ -14,7 +14,7 @@ DATA_DIR = BASE_DIR / "data"
 env_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=env_path)
 
-APP_NAME = "JCAB Academic Prototype"
+APP_NAME = "Adaptive Assessment"
 APP_VERSION = "0.2.0-dev"
 
 # ML Models

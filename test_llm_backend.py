@@ -55,9 +55,8 @@ def main():
             initial_response=initial_response,
             followup_question=followup_question,
             followup_response=followup_response,
-            score=8.5,
-            learner_level="Good",
             topic="Java Core",
+            auth_assessment={"score": 8.5, "learner_level": "Good", "missing_concepts": [], "strengths": ["Clear explanation"], "areas_to_improve": []},
             progress_callback=progress_callback
         )
         
@@ -82,6 +81,7 @@ def main():
     print(f"Final mode: {mode}")
     print(f"Actual working model: {working_model}")
     print(f"Total requests: {LLMProvider._total_requests}")
+    print(f"Retries: {LLMProvider._total_retries}")
     print(f"Total elapsed: {elapsed:.2f}s")
 
 if __name__ == "__main__":
