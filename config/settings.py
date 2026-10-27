@@ -67,4 +67,4 @@ RESEARCH_STATUS = "Preliminary Prototype"
 TARGET_POPULATION = "MCA Students"
 
 # Experimental Toggles
-USE_LLM_FEEDBACK = True  # Enabled for multi-agent LLM integration
+USE_LLM_FEEDBACK = os.environ.get("USE_LLM_FEEDBACK", "true").lower() in ("true", "1", "yes")

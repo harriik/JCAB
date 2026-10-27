@@ -18,35 +18,37 @@ logger = logging.getLogger("JCAB_LLM")
 
 # Define structured output schemas using Pydantic
 class Agent1Analysis(BaseModel):
-    understanding: str = Field(description="Analysis of conceptual understanding")
-    strengths: List[str] = Field(description="List of conceptual strengths")
-    weaknesses: List[str] = Field(description="List of conceptual weaknesses")
-    misconceptions: List[str] = Field(description="Identified misconceptions")
-    confidence: float = Field(description="Confidence score between 0.0 and 1.0")
+    understanding: str = Field(description="One concise sentence (maximum 15 words) summarizing actual conceptual understanding.")
+    strengths: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) identifying what the student understood correctly. Empty list if none.")
+    knowledge_gaps: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) identifying specific gaps. Empty list if none.")
+    weaknesses: List[str] = Field(default_factory=list, description="Alias for knowledge_gaps (maximum 2 concise items, 5-15 words each).")
+    misconceptions: List[str] = Field(default_factory=list, description="Maximum 2 items (5-15 words each), ONLY when the student explicitly stated a false concept. Empty list if none.")
+    missing_concepts: List[str] = Field(default_factory=list, description="Maximum 2 items (5-15 words each) identifying key omitted concepts. Empty list if none.")
+    confidence: float = Field(default=0.9, description="Confidence score between 0.0 and 1.0.")
 
 class Agent2Feedback(BaseModel):
-    feedback_summary: str = Field(description="Summary of personalized feedback")
-    strengths: List[str] = Field(description="Strengths to highlight to the student")
-    areas_to_improve: List[str] = Field(description="Areas the student needs to improve")
-    explanation: str = Field(description="Personalized explanation clarifying the concept")
-    encouragement: str = Field(description="Encouraging closing statement")
+    feedback_summary: str = Field(description="One concise sentence (maximum 20 words) summarizing feedback.")
+    strengths: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) highlighting demonstrated strengths.")
+    areas_to_improve: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) highlighting priority areas for improvement.")
+    explanation: str = Field(description="Personalized educational explanation: strictly 2-4 sentences, MAXIMUM 60 WORDS. Direct and constructive. No flattery. MCA student level.")
+    encouragement: str = Field(default="", description="Optional brief closing (maximum 10 words), avoid flattering adjectives.")
 
 class Agent3Recommendation(BaseModel):
-    recommended_topic: str = Field(description="Topic for next learning step")
-    reason: str = Field(description="Why this topic is recommended")
-    recommended_action: str = Field(description="Specific actionable advice")
-    practice_suggestions: List[str] = Field(description="List of specific practice exercises")
-    next_learning_step: str = Field(description="The immediate next step to take")
+    recommended_topic: str = Field(description="Specific Java topic for next study step.")
+    reason: str = Field(description="One concise sentence (maximum 15 words) explaining why.")
+    recommended_action: str = Field(description="One concrete next action sentence of MAXIMUM 20 WORDS.")
+    practice_suggestions: List[str] = Field(default_factory=list, description="Maximum 2 concrete practice exercises. Each MUST be one sentence of MAXIMUM 20 WORDS.")
+    next_learning_step: str = Field(default="", description="Immediate next action: exactly one sentence of MAXIMUM 20 WORDS.")
 
 class Agent4Coordinator(BaseModel):
-    overall_summary: str = Field(description="Cohesive summary of feedback")
-    strengths: List[str] = Field(description="Synthesized strengths")
-    areas_to_improve: List[str] = Field(description="Synthesized areas to improve")
-    conceptual_issues: List[str] = Field(description="Synthesized conceptual issues or misconceptions")
-    personalized_feedback: str = Field(description="Final cohesive personalized explanation")
-    learning_recommendation: str = Field(description="Synthesized learning recommendation")
-    next_learning_step: str = Field(description="Final actionable next step")
-    practice_suggestions: List[str] = Field(default=[], description="Final synthesized practice suggestions")
+    overall_summary: str = Field(description="One concise sentence (strictly MAXIMUM 20 WORDS) stating the overall assessment result. Do not repeat verbatim in personalized_feedback.")
+    strengths: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) highlighting demonstrated strengths. Empty list if none.")
+    areas_to_improve: List[str] = Field(default_factory=list, description="Maximum 2 concise items (5-15 words each) highlighting priority areas for improvement.")
+    conceptual_issues: List[str] = Field(default_factory=list, description="0 to 2 items (5-15 words each), ONLY if explicit misconceptions were identified. Empty list otherwise.")
+    personalized_feedback: str = Field(description="Personalized feedback paragraph: strictly 2-4 sentences, MAXIMUM 60 WORDS. Direct, constructive, educational. Must NOT repeat overall_summary.")
+    learning_recommendation: str = Field(description="One concrete recommendation sentence of MAXIMUM 20 WORDS.")
+    next_learning_step: str = Field(default="", description="One concrete next action sentence of MAXIMUM 20 WORDS.")
+    practice_suggestions: List[str] = Field(default_factory=list, description="Maximum 2 actionable practice exercises (each one sentence of MAXIMUM 20 WORDS).")
 
 class LLMProvider:
     """Clean abstraction for LLM API providers."""
@@ -102,6 +104,7 @@ class LLMProvider:
                         response_mime_type="application/json",
                         response_schema=schema_class,
                         temperature=0.2,
+                        max_output_tokens=600,
                     )
                 )
                 
@@ -190,12 +193,191 @@ class LLMProvider:
             raise Exception(f"All candidate models failed or unavailable. Last error: {last_err}")
 
 
+def sanitize_text(text: str) -> str:
+    """Removes excessive flattery phrases and normalizes whitespace."""
+    if not text:
+        return ""
+    import re
+    flattery_phrases = [
+        r"your response is exceptionally well-crafted",
+        r"exceptionally well-crafted",
+        r"you have a fantastic grasp of the fundamentals",
+        r"fantastic grasp of the fundamentals",
+        r"keep pushing your knowledge further",
+        r"demonstrates a complete understanding of how the system operates under the hood",
+        r"under the hood",
+        r"outstanding response",
+        r"stellar job",
+        r"brilliant explanation",
+        r"kudos on",
+    ]
+    cleaned = text.strip()
+    for phrase in flattery_phrases:
+        cleaned = re.sub(phrase, "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+    cleaned = re.sub(r'^\s*[,;.-]\s*', '', cleaned)
+    return cleaned
+
+def clamp_words_by_sentence(text: str, max_words: int) -> str:
+    """
+    Limits text to max_words without breaking sentences mid-way.
+    If multiple sentences exist, retains complete sentences that fit within max_words.
+    If the first sentence itself exceeds max_words, cleanly cuts at word boundary with a period.
+    """
+    if not text:
+        return ""
+    text = sanitize_text(text)
+    words = text.split()
+    if len(words) <= max_words:
+        return text
+
+    import re
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    valid_sentences = []
+    current_count = 0
+    for s in sentences:
+        s_clean = s.strip()
+        if not s_clean:
+            continue
+        s_count = len(s_clean.split())
+        if current_count + s_count <= max_words:
+            valid_sentences.append(s_clean)
+            current_count += s_count
+        else:
+            break
+
+    if valid_sentences:
+        return " ".join(valid_sentences).strip()
+
+    truncated = " ".join(words[:max_words]).rstrip(",;: -")
+    if not truncated.endswith((".", "!", "?")):
+        truncated += "."
+    return truncated
+
+def clamp_list_items(items: List[str], max_items: int = 2, max_words_per_item: int = 20) -> List[str]:
+    """Clamps list to max_items, removes duplicate entries, and caps words per item."""
+    if not items:
+        return []
+    result = []
+    seen = set()
+    for item in items:
+        if not item or not isinstance(item, str):
+            continue
+        cleaned = clamp_words_by_sentence(item.strip(), max_words=max_words_per_item)
+        if not cleaned:
+            continue
+        norm_key = cleaned.lower()
+        if norm_key not in seen:
+            seen.add(norm_key)
+            result.append(cleaned)
+        if len(result) >= max_items:
+            break
+    return result
+
+def deduplicate_summary_and_feedback(summary: str, feedback: str) -> str:
+    """Ensures summary is not repeated verbatim at the start of or inside personalized feedback."""
+    if not summary or not feedback:
+        return feedback
+    import re
+    norm_summary = re.sub(r'[^a-zA-Z0-9\s]', '', summary.lower()).strip()
+    sentences = re.split(r'(?<=[.!?])\s+', feedback.strip())
+    filtered = []
+    for s in sentences:
+        norm_s = re.sub(r'[^a-zA-Z0-9\s]', '', s.lower()).strip()
+        if norm_s and norm_s == norm_summary:
+            continue
+        filtered.append(s)
+    if filtered:
+        return " ".join(filtered).strip()
+    return feedback
+
+def normalize_and_validate_feedback(a4: Agent4Coordinator, context: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Applies field-specific validation and normalization to enforce strict limits:
+    - Overall summary: 1 sentence, max 20 words
+    - Strengths: max 2 items, max 15 words each
+    - Improvements: max 2 items, max 15 words each
+    - Misconceptions: max 2 items, max 15 words each (empty if none)
+    - Personalized feedback: max 60 words (2-4 sentences, no verbatim duplication)
+    - Recommended next steps: max 2 items, max 20 words each
+    """
+    topic = context.get("topic", "Java")
+    score = context.get("score", 5.0)
+
+    # 1. Overall Summary (max 20 words)
+    summary = clamp_words_by_sentence(a4.overall_summary, max_words=20)
+    if not summary:
+        if score >= 8.5:
+            summary = f"Demonstrates strong and accurate understanding of {topic} principles."
+        elif score >= 5.0:
+            summary = f"Demonstrates partial understanding of {topic}, with key details omitted."
+        elif score >= 2.5:
+            summary = f"The response shows foundational misunderstandings regarding {topic} in Java."
+        else:
+            summary = f"The response does not provide sufficient evidence to assess {topic}."
+
+    # 2. Strengths (max 2 items, 15 words each)
+    strengths = clamp_list_items(a4.strengths, max_items=2, max_words_per_item=15)
+
+    # 3. Improvements (max 2 items, 15 words each)
+    improvements = clamp_list_items(a4.areas_to_improve, max_items=2, max_words_per_item=15)
+
+    # 4. Misconceptions (max 2 items, 15 words each, empty if none or high score)
+    misconceptions = []
+    if score < 8.5 and a4.conceptual_issues:
+        misconceptions = clamp_list_items(a4.conceptual_issues, max_items=2, max_words_per_item=15)
+
+    # 5. Personalized Feedback (max 60 words, 2-4 sentences, no summary duplication)
+    raw_fb = deduplicate_summary_and_feedback(summary, a4.personalized_feedback)
+    feedback = clamp_words_by_sentence(raw_fb, max_words=60)
+    if not feedback:
+        if score >= 8.5:
+            feedback = f"You demonstrated accurate technical understanding of {topic}. Your grasp of fundamentals is sound, and you can now proceed to explore advanced design patterns."
+        elif score >= 5.0:
+            feedback = f"You identified several key elements of {topic}. Clarifying the remaining mechanisms and practicing with concrete code will make your technical explanation complete."
+        else:
+            feedback = f"Your response showed conceptual confusion regarding {topic}. Review the core rules and language constructs in Java to build a solid foundation."
+
+    # 6. Actionable recommendations (max 2 items, max 20 words each)
+    rec_actions = []
+    for item in a4.practice_suggestions:
+        if item and item not in rec_actions:
+            rec_actions.append(item)
+    if a4.next_learning_step and a4.next_learning_step not in rec_actions:
+        rec_actions.append(a4.next_learning_step)
+    if a4.learning_recommendation and a4.learning_recommendation not in rec_actions:
+        rec_actions.append(a4.learning_recommendation)
+    rec_actions = clamp_list_items(rec_actions, max_items=2, max_words_per_item=20)
+
+    rec_single = clamp_words_by_sentence(a4.learning_recommendation, max_words=20)
+    if not rec_single and rec_actions:
+        rec_single = rec_actions[0]
+
+    next_step = clamp_words_by_sentence(a4.next_learning_step, max_words=20)
+    if not next_step and len(rec_actions) > 1:
+        next_step = rec_actions[1]
+
+    return {
+        "overall_summary": summary,
+        "strengths": strengths,
+        "improvements": improvements,
+        "areas_to_improve": improvements,
+        "misconceptions": misconceptions,
+        "feedback": feedback,
+        "personalized_feedback": feedback,
+        "recommendation": rec_single,
+        "next_step": next_step,
+        "practice_suggestions": rec_actions,
+        "recommended_actions": rec_actions,
+    }
+
 def _agent_1_analyzer(provider: LLMProvider, context: Dict[str, Any]) -> Agent1Analysis:
     prompt = f"""
-    You are Agent 1: Response Analyzer for a Java assessment framework.
-    Task: Analyze the student's conceptual understanding based on their responses.
-    DO NOT change or evaluate the predicted score. The score is authoritative.
-    
+    You are Agent 1: Response Analyzer for an adaptive Java assessment system for MCA students.
+    Task: Objectively identify the student's actual conceptual understanding based on their responses.
+    DO NOT change or evaluate the predicted score. The score ({context['score']}/10) and learner level ({context['learner_level']}) are authoritative.
+
+    Context:
     - Topic: {context['topic']}
     - Question 1: {context['question']}
     - Student Response 1: {context['initial_response']}
@@ -203,65 +385,107 @@ def _agent_1_analyzer(provider: LLMProvider, context: Dict[str, Any]) -> Agent1A
     - Student Response 2: {context['followup_response']}
     - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
-    - Detected Strengths: {context['strengths']}
-    - Missing Concepts: {context['missing_concepts']}
-    
-    Provide your structured analysis.
+    - Rubric Strengths: {context['strengths']}
+    - Rubric Missing Concepts: {context['missing_concepts']}
+
+    Strict Output Rules:
+    1. Strengths: Maximum 2 concise items (5-15 words each). What did the student understand correctly? Return [] if empty/irrelevant response.
+    2. Knowledge Gaps: Maximum 2 concise items (5-15 words each) identifying missing knowledge.
+    3. Misconceptions: Maximum 2 items (5-15 words each), ONLY when the student explicitly stated a false concept. Do NOT invent misconceptions. Return [] if none.
+    4. Missing Concepts: Maximum 2 items (5-15 words each) naming essential omitted concepts. Return [] if none.
+    5. No repetition across categories. Each item must be a short sentence or phrase (5-15 words).
     """
-    return provider.generate_structured_content(prompt, Agent1Analysis)
+    ans = provider.generate_structured_content(prompt, Agent1Analysis)
+    if not ans.knowledge_gaps and ans.weaknesses:
+        ans.knowledge_gaps = ans.weaknesses
+    elif not ans.weaknesses and ans.knowledge_gaps:
+        ans.weaknesses = ans.knowledge_gaps
+    return ans
 
 def _agent_2_feedback(provider: LLMProvider, context: Dict[str, Any], a1_out: Agent1Analysis) -> Agent2Feedback:
     prompt = f"""
-    You are Agent 2: Personalized Feedback Agent.
-    Task: Generate highly specific feedback for this student.
-    
+    You are Agent 2: Personalized Feedback Agent for an adaptive Java assessment system for MCA students.
+    Task: Generate direct, constructive educational feedback based on Agent 1's analysis and assessment evidence.
+
     Context:
     - Topic: {context['topic']}
-    - Original Question: {context['question']}
-    - Student Response: {context['initial_response']}
+    - Question 1: {context['question']}
+    - Student Response 1: {context['initial_response']}
+    - Question 2: {context['followup_question']}
+    - Student Response 2: {context['followup_response']}
     - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
-    
+
     Agent 1 Analysis:
     {a1_out.model_dump_json(indent=2)}
-    
-    If score is high, reinforce and push further. If medium, target gaps. If low, correct misconceptions simply.
-    Provide specific, actionable feedback explaining exactly where their reasoning succeeded or failed.
+
+    Strict Rules:
+    1. Length: The explanation MUST be 2 to 4 sentences, MAXIMUM 60 WORDS.
+    2. Content:
+       - Mention what the student understood correctly.
+       - Identify the most important missing concept or mistake, if one exists.
+       - Give a clear, useful conceptual explanation or correction.
+    3. Performance Tailoring:
+       - Strong answer (score >= 8.5): Acknowledge understanding briefly. Identify at most one meaningful refinement. Do not invent weaknesses.
+       - Partially correct (5.0 <= score < 8.5): Note what is correct, identify the primary missing concept, and explain it clearly.
+       - Incorrect answer (score < 5.0 with misconception): Respectfully correct the misunderstanding in simple language.
+       - Irrelevant/Empty answer (score < 2.5 or empty): State that the response did not provide enough relevant evidence to assess the concept; ask student to review and reattempt.
+    4. Tone:
+       - Zero excessive flattery (never say "exceptionally well-crafted", "fantastic grasp", "under the hood", "stellar job").
+       - Direct, clear educational language appropriate for an MCA student learning programming.
+       - Do NOT restate the entire original student answer.
     """
     return provider.generate_structured_content(prompt, Agent2Feedback)
 
 def _agent_3_recommendation(provider: LLMProvider, context: Dict[str, Any], a1_out: Agent1Analysis, a2_out: Agent2Feedback) -> Agent3Recommendation:
     prompt = f"""
-    You are Agent 3: Learning Recommendation Agent.
-    Task: Generate an actionable learning plan based on detected weaknesses.
-    
+    You are Agent 3: Learning Recommendation Agent for an adaptive Java assessment system for MCA students.
+    Task: Provide concrete, actionable next learning steps.
+
     Context:
     - Topic: {context['topic']}
     - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
-    
+
     Agent 1 Analysis: {a1_out.model_dump_json()}
     Agent 2 Feedback: {a2_out.model_dump_json()}
-    
-    Recommend a specific next topic, specific action, and 2-3 specific practice suggestions.
+
+    Strict Rules:
+    1. Provide MAXIMUM 2 recommendations / practice suggestions.
+    2. Each recommendation MUST be ONE sentence of NO MORE THAN 20 WORDS.
+    3. Must identify a concrete action (e.g., "Review method overriding syntax and write a subclass extending a parent class.").
+    4. Avoid vague suggestions such as "study more", "keep learning", or "explore advanced topics".
+    5. Align with student performance:
+       - Strong: Appropriate next advanced topic or practical implementation exercise.
+       - Partial: Targeted exercise focusing on the missing concept.
+       - Incorrect: Foundational exercise reviewing the basic definition and syntax.
+       - Irrelevant/Empty: Review core topic materials and reattempt the assessment.
     """
     return provider.generate_structured_content(prompt, Agent3Recommendation)
 
 def _agent_4_coordinator(provider: LLMProvider, context: Dict[str, Any], a1_out: Agent1Analysis, a2_out: Agent2Feedback, a3_out: Agent3Recommendation) -> Agent4Coordinator:
     prompt = f"""
-    You are Agent 4: Feedback Coordinator.
-    Task: Produce one final, cohesive, and perfectly structured response synthesizing the outputs of Agents 1-3.
-    DO NOT introduce new claims unsupported by the previous agents or student responses.
-    
+    You are Agent 4: Feedback Coordinator for an adaptive Java assessment system for MCA students.
+    Task: Synthesize the outputs of Agents 1-3 into one concise, consistent final feedback object.
+
     Context:
     - Authoritative Score: {context['score']}/10
     - Learner Level: {context['learner_level']}
-    
+    - Topic: {context['topic']}
+
     Agent 1 (Analysis): {a1_out.model_dump_json()}
     Agent 2 (Feedback): {a2_out.model_dump_json()}
     Agent 3 (Recommendation): {a3_out.model_dump_json()}
-    
-    Synthesize this into the final response format.
+
+    Strict Synthesis Rules:
+    1. Feedback Summary (overall_summary): Exactly ONE sentence, MAXIMUM 20 WORDS.
+    2. Strengths: Maximum 2 concise items (5-15 words each). If empty/irrelevant response, return [].
+    3. Areas for Improvement (areas_to_improve): Maximum 2 concise items (5-15 words each).
+    4. Conceptual Issues (conceptual_issues): Maximum 2 items (5-15 words each), ONLY when actual misconceptions were detected. Return [] otherwise.
+    5. Personalized Feedback (personalized_feedback): Strictly 2-4 sentences, MAXIMUM 60 WORDS. Direct, educational explanation. DO NOT repeat overall_summary verbatim!
+    6. Learning Recommendations (practice_suggestions & learning_recommendation): Maximum 2 actionable recommendations, each ONE sentence of MAXIMUM 20 WORDS.
+    7. Overall visibility: Total feedback must be concise, around 80-120 words across all fields.
+    8. Zero flattery, zero filler, zero duplicate statements.
     """
     return provider.generate_structured_content(prompt, Agent4Coordinator)
 
@@ -277,6 +501,7 @@ def run_multi_agent_feedback(
 ) -> Dict[str, Any]:
     """
     Executes the 4-agent LLM pipeline to generate personalized feedback.
+    Applies strict output validation and normalization before returning.
     Raises exception if API fails, which will trigger the robust rule-based fallback.
     """
     provider = LLMProvider()
@@ -327,6 +552,7 @@ def run_multi_agent_feedback(
     t0 = time.time()
     a4_out = _agent_4_coordinator(provider, context, a1_out, a2_out, a3_out)
     latencies['agent_4_sec'] = round(time.time() - t0, 2)
+    logger.info(f"Agent 4 (Coordinator) complete in {latencies['agent_4_sec']}s.")
     
     if progress_callback:
         progress_callback("Generating personalized feedback...\n\n✓ Response Analyzer\n✓ Personalized Feedback\n✓ Learning Recommendation\n✓ Coordinator")
@@ -337,25 +563,17 @@ def run_multi_agent_feedback(
     latencies['total_requests'] = LLMProvider._total_requests
     latencies['total_retries'] = LLMProvider._total_retries
     
-    logger.info(f"Agent 4 (Coordinator) complete in {latencies['agent_4_sec']}s. Total time: {total_time}s.")
-    
-    # Store complete LLM trace in context (useful for logging later)
-    return {
-        "overall_summary": a4_out.overall_summary,
-        "strengths": a4_out.strengths,
-        "improvements": a4_out.areas_to_improve,
-        "misconceptions": a4_out.conceptual_issues,
-        "feedback": a4_out.personalized_feedback,
-        "recommendation": a4_out.learning_recommendation,
-        "practice_suggestions": a4_out.practice_suggestions,
-        "next_step": a4_out.next_learning_step,
-        "mode": "Multi-Agent LLM",
-        "working_model": latencies['model_used'],
-        "latencies": latencies,
-        "debug_trace": {
-            "agent_1": a1_out.model_dump(),
-            "agent_2": a2_out.model_dump(),
-            "agent_3": a3_out.model_dump(),
-            "agent_4": a4_out.model_dump(),
-        }
+    # Apply strict validation and normalization
+    validated_output = normalize_and_validate_feedback(a4_out, context)
+    validated_output["mode"] = "Multi-Agent LLM — Gemini"
+    validated_output["feedback_mode"] = "Multi-Agent LLM — Gemini"
+    validated_output["working_model"] = latencies['model_used']
+    validated_output["latencies"] = latencies
+    validated_output["debug_trace"] = {
+        "agent_1": a1_out.model_dump(),
+        "agent_2": a2_out.model_dump(),
+        "agent_3": a3_out.model_dump(),
+        "agent_4": a4_out.model_dump(),
     }
+    
+    return validated_output

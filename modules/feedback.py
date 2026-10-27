@@ -130,6 +130,7 @@ def generate_authoritative_assessment(
         "strengths": strengths,
         "missing_concepts": missing,
         "areas_to_improve": improvements,
+        "concept_explanation": topic_rubric.get("reference_explanation", f"Key conceptual mechanisms and principles of {topic} in Java."),
         "debug_sim": round(sim, 3),
         "debug_cov": round(coverage, 3)
     }
@@ -144,37 +145,134 @@ def generate_development_fallback_feedback(
 ) -> Dict[str, Any]:
     """
     MODE 1 - DEVELOPMENT FALLBACK
-    Generates full feedback using the local heuristic assessment.
+    Generates concise, constructive, performance-tailored feedback
+    using deterministic heuristic assessment, adhering to strict word and item limits:
+    - Overall summary: 1 sentence, max 20 words
+    - Strengths: max 2 items, 5-15 words each
+    - Areas for improvement: max 2 items, 5-15 words each
+    - Personalized feedback: 2-4 sentences, max 60 words
+    - Recommended next steps: max 2 items, max 20 words each
     """
     if auth_assessment is None:
-        auth_assessment = generate_authoritative_assessment(topic, question, initial_response, followup_question, followup_response)
+        auth_assessment = generate_authoritative_assessment(
+            topic, question, initial_response, followup_question, followup_response
+        )
         
     final_score = auth_assessment["score"]
     level = auth_assessment["learner_level"]
-    strengths = auth_assessment["strengths"]
-    improvements = auth_assessment["areas_to_improve"]
-    missing = auth_assessment["missing_concepts"]
+    missing = auth_assessment.get("missing_concepts", [])
+    raw_strengths = auth_assessment.get("strengths", [])
     
-    if final_score < 5.0:
-        if not missing:
-            improvements.append(f"The structural understanding of {topic} is lacking despite using keywords.")
-        feedback = f"The response demonstrates a {level.lower()} understanding of {topic}. The explanation lacked required depth regarding how these principles operate in Java."
-        recommendation = f"Focus on understanding the core mechanisms of {topic}. Practice explaining {missing[0] if missing else 'the basic concepts'} with code examples."
-    elif final_score < 8.5:
-        improvements.append(f"The explanation of {topic} could be more comprehensive.")
-        feedback = f"The response demonstrates a {level.lower()} understanding. While basic knowledge of {topic} is present, greater clarity is needed for a complete technical answer."
-        recommendation = f"Review how {topic} applies in practice, specifically focusing on {missing[0] if missing else 'edge cases'}."
-    else:
-        improvements.append(f"Consider explaining edge cases of {topic} for an even stronger technical answer.")
-        feedback = f"The response demonstrates an {level.lower()} understanding of {topic}, covering the necessary conceptual ground."
-        recommendation = f"Your understanding of {topic} is solid. Proceed to explore advanced implementations."
+    student_text = f"{initial_response} {followup_response}".strip()
+    is_empty_or_irrelevant = (final_score < 2.5) or (len(student_text) < 15)
+    
+    misconceptions = []
+    
+    # 1. Performance-Tailored Generation
+    if is_empty_or_irrelevant:
+        overall_summary = f"The response does not provide sufficient evidence to assess understanding of {topic}."
+        strengths = []
+        improvements = [f"Review foundational principles of {topic} before reattempting."]
+        feedback = (
+            f"Your response did not provide enough relevant evidence to evaluate your knowledge of {topic}. "
+            f"Please review the core principles and attempt the question again."
+        )
+        recommendation = f"Review the question carefully and reattempt with a conceptual explanation."
+        next_step = f"Review the basic definition of {topic} in your study materials."
+        recommended_actions = [
+            f"Review the basic definition and key concepts of {topic}.",
+            f"Reattempt the question with a complete explanation."
+        ]
         
+    elif final_score < 5.0:
+        # Incorrect answer
+        overall_summary = f"The response shows fundamental misunderstandings regarding {topic} in Java."
+        strengths = [s for s in raw_strengths if "Correctly" in s][:1]
+        improvements = [
+            f"Clarify the core definition and syntax of {topic}.",
+            f"Avoid confusing {topic} with unrelated programming concepts."
+        ]
+        misconceptions = [f"Misidentified core mechanisms of {topic} in Java."]
+        focus_concept = missing[0] if missing else topic
+        feedback = (
+            f"Your explanation misidentified key concepts of {topic}. In Java, {topic} relies on specific "
+            f"rules and language constructs. Review the basic definitions before moving to complex usage."
+        )
+        recommendation = f"Review foundational Java tutorials on {topic} and practice simple examples."
+        next_step = f"Write a minimal Java program illustrating {focus_concept}."
+        recommended_actions = [
+            f"Review foundational documentation and syntax rules for {topic}.",
+            f"Write a minimal Java program illustrating {focus_concept}."
+        ]
+        
+    elif final_score < 8.5:
+        # Partially correct answer
+        overall_summary = f"Demonstrates partial understanding of {topic}, with key technical details missing."
+        strengths = []
+        for s in raw_strengths:
+            if "Correctly" in s:
+                strengths.append(s)
+        if not strengths:
+            strengths.append(f"Demonstrated basic conceptual familiarity with {topic}.")
+        strengths = strengths[:2]
+        
+        improvements = []
+        if missing:
+            improvements.append(f"Explain key missing concepts: {', '.join(missing[:2])}.")
+        improvements.append(f"Provide greater technical depth on {topic} mechanisms.")
+        improvements = improvements[:2]
+        
+        gap_concept = missing[0] if missing else "core mechanisms"
+        feedback = (
+            f"You correctly identified several elements of {topic}. However, your explanation needs a clearer "
+            f"description of {gap_concept} in Java. Adding specific technical details will complete your answer."
+        )
+        recommendation = f"Practise explaining {gap_concept} with a short code example."
+        next_step = f"Review how {gap_concept} operates in standard Java libraries."
+        recommended_actions = [
+            f"Review the role of {gap_concept} in Java.",
+            f"Write a short code example demonstrating {gap_concept}."
+        ]
+        
+    else:
+        # Strong answer (score >= 8.5)
+        overall_summary = f"Demonstrates strong and accurate understanding of {topic} principles."
+        strengths = [
+            f"Accurately explained core principles of {topic}.",
+            f"Clearly addressed both initial and follow-up questions."
+        ]
+        improvements = [
+            f"Explore edge cases and advanced implementation patterns for {topic}."
+        ]
+        feedback = (
+            f"You accurately explained {topic} and demonstrated sound technical knowledge. "
+            f"Your understanding of the fundamentals is solid. You can now explore advanced implementations."
+        )
+        recommendation = f"Explore advanced design patterns and best practices for {topic}."
+        next_step = f"Implement an advanced example combining {topic} with other Java features."
+        recommended_actions = [
+            f"Explore advanced design patterns and best practices for {topic}.",
+            f"Analyze practical edge cases or performance considerations."
+        ]
+
     return {
         "feedback_mode": "Development Fallback (Rule-Based)",
-        "strengths": strengths,
-        "areas_to_improve": improvements,
-        "overall_summary": feedback,
+        "mode": "Development Fallback (Rule-Based)",
+        "score": final_score,
+        "learner_level": level,
+        "overall_summary": overall_summary,
+        "strengths": strengths[:2],
+        "improvements": improvements[:2],
+        "areas_to_improve": improvements[:2],
+        "misconceptions": misconceptions[:2],
+        "feedback": feedback,
+        "personalized_feedback": feedback,
         "recommendation": recommendation,
+        "next_step": next_step,
+        "practice_suggestions": recommended_actions[:2],
+        "recommended_actions": recommended_actions[:2],
+        "debug_sim": auth_assessment.get("debug_sim", 0.0),
+        "debug_cov": auth_assessment.get("debug_cov", 0.0),
     }
 
 
@@ -204,6 +302,7 @@ def get_feedback(
     experimental_ml_learner_level: str,
     topic: str,
     use_llm: bool = False,
+    demo_mode: bool = False,
     progress_callback=None
 ) -> Dict[str, Any]:
     """
@@ -222,6 +321,7 @@ def get_feedback(
         "assessment_mode": auth_assessment["assessment_mode"],
         "strengths": auth_assessment["strengths"],
         "areas_to_improve": auth_assessment["areas_to_improve"],
+        "concept_explanation": auth_assessment.get("concept_explanation", ""),
         "experimental_ml_score": experimental_ml_score,
         "experimental_ml_learner_level": experimental_ml_learner_level
     }
@@ -231,6 +331,8 @@ def get_feedback(
             llm_result = generate_llm_feedback(
                 question, initial_response, followup_question, followup_response, topic, auth_assessment, progress_callback
             )
+            llm_result["mode"] = "Multi-Agent LLM — Gemini"
+            llm_result["feedback_mode"] = "Multi-Agent LLM — Gemini"
             unified_result.update(llm_result)
             return unified_result
         except Exception as e:
@@ -242,6 +344,8 @@ def get_feedback(
             fallback = generate_development_fallback_feedback(
                 topic, question, initial_response, followup_question, followup_response, auth_assessment
             )
+            fallback["mode"] = "Automatic Fallback — Gemini Unavailable"
+            fallback["feedback_mode"] = "Automatic Fallback — Gemini Unavailable"
             fallback["fallback_reason"] = str(e)
             unified_result.update(fallback)
             return unified_result
@@ -249,6 +353,9 @@ def get_feedback(
     fallback = generate_development_fallback_feedback(
         topic, question, initial_response, followup_question, followup_response, auth_assessment
     )
-    fallback["fallback_reason"] = "LLM configuration disabled"
+    target_mode = "Demo Mode — Local Fallback" if demo_mode else "Automatic Fallback — Gemini Unavailable"
+    fallback["mode"] = target_mode
+    fallback["feedback_mode"] = target_mode
+    fallback["fallback_reason"] = "Demo Mode active" if demo_mode else "Gemini pipeline disabled or bypassed"
     unified_result.update(fallback)
     return unified_result

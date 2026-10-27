@@ -1,33 +1,35 @@
 {
   "Agent1Analysis": {
-    "understanding": "string",
-    "strengths": ["string"],
-    "weaknesses": ["string"],
-    "misconceptions": ["string"],
+    "understanding": "string (1 sentence, max 15 words)",
+    "strengths": ["string (max 2 items, 5-15 words each)"],
+    "knowledge_gaps": ["string (max 2 items, 5-15 words each)"],
+    "weaknesses": ["string (alias to knowledge_gaps)"],
+    "misconceptions": ["string (max 2 items, only when detected)"],
+    "missing_concepts": ["string (max 2 items, only when relevant)"],
     "confidence": "number (0.0 to 1.0)"
   },
   "Agent2Feedback": {
-    "feedback_summary": "string",
-    "strengths": ["string"],
-    "areas_to_improve": ["string"],
-    "explanation": "string",
-    "encouragement": "string"
+    "feedback_summary": "string (1 sentence, max 20 words)",
+    "strengths": ["string (max 2 items, 5-15 words each)"],
+    "areas_to_improve": ["string (max 2 items, 5-15 words each)"],
+    "explanation": "string (2-4 sentences, max 60 words)",
+    "encouragement": "string (optional, max 10 words)"
   },
   "Agent3Recommendation": {
     "recommended_topic": "string",
-    "reason": "string",
-    "recommended_action": "string",
-    "practice_suggestions": ["string"],
-    "next_learning_step": "string"
+    "reason": "string (max 15 words)",
+    "recommended_action": "string (1 sentence, max 20 words)",
+    "practice_suggestions": ["string (max 2 items, each 1 sentence <= 20 words)"],
+    "next_learning_step": "string (1 sentence, max 20 words)"
   },
   "Agent4Coordinator": {
-    "overall_summary": "string",
-    "strengths": ["string"],
-    "areas_to_improve": ["string"],
-    "conceptual_issues": ["string"],
-    "personalized_feedback": "string",
-    "learning_recommendation": "string",
-    "next_learning_step": "string",
-    "practice_suggestions": ["string"]
+    "overall_summary": "string (1 sentence, max 20 words)",
+    "strengths": ["string (max 2 items, 5-15 words each)"],
+    "areas_to_improve": ["string (max 2 items, 5-15 words each)"],
+    "conceptual_issues": ["string (max 2 items, only if detected)"],
+    "personalized_feedback": "string (2-4 sentences, max 60 words, no summary duplication)",
+    "learning_recommendation": "string (1 sentence, max 20 words)",
+    "next_learning_step": "string (1 sentence, max 20 words)",
+    "practice_suggestions": ["string (max 2 items, each 1 sentence <= 20 words)"]
   }
 }
