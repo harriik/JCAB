@@ -67,4 +67,17 @@ RESEARCH_STATUS = "Preliminary Prototype"
 TARGET_POPULATION = "MCA Students"
 
 # Experimental Toggles
-USE_LLM_FEEDBACK = os.environ.get("USE_LLM_FEEDBACK", "true").lower() in ("true", "1", "yes")
+def _get_use_llm_setting() -> bool:
+    val = os.environ.get("USE_LLM_FEEDBACK")
+    if val is not None:
+        return val.lower() in ("true", "1", "yes")
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets") and "USE_LLM_FEEDBACK" in st.secrets:
+            s_val = str(st.secrets["USE_LLM_FEEDBACK"]).lower()
+            return s_val in ("true", "1", "yes")
+    except Exception:
+        pass
+    return True
+
+USE_LLM_FEEDBACK = _get_use_llm_setting()

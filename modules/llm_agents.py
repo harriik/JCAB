@@ -59,12 +59,46 @@ class LLMProvider:
     _working_model = None
 
     def __init__(self):
-        self.provider = os.environ.get("LLM_PROVIDER", "gemini").lower()
-        self.api_key = os.environ.get("LLM_API_KEY", "")
-        self.model = os.environ.get("LLM_MODEL", "gemini-3.5-flash-lite")
+        # Resolve API key: check environment variables first, then Streamlit secrets
+        api_key = os.environ.get("LLM_API_KEY", "") or os.environ.get("GEMINI_API_KEY", "")
+        if not api_key:
+            try:
+                import streamlit as st
+                if hasattr(st, "secrets"):
+                    if "LLM_API_KEY" in st.secrets:
+                        api_key = str(st.secrets["LLM_API_KEY"]).strip()
+                    elif "GEMINI_API_KEY" in st.secrets:
+                        api_key = str(st.secrets["GEMINI_API_KEY"]).strip()
+            except Exception:
+                pass
+        self.api_key = api_key
+        if api_key and "LLM_API_KEY" not in os.environ:
+            os.environ["LLM_API_KEY"] = api_key
+
+        # Resolve model name: environment variable, then Streamlit secrets, then default
+        model = os.environ.get("LLM_MODEL", "")
+        if not model:
+            try:
+                import streamlit as st
+                if hasattr(st, "secrets") and "LLM_MODEL" in st.secrets:
+                    model = str(st.secrets["LLM_MODEL"]).strip()
+            except Exception:
+                pass
+        self.model = model or "gemini-3.5-flash-lite"
+
+        # Resolve provider
+        provider = os.environ.get("LLM_PROVIDER", "")
+        if not provider:
+            try:
+                import streamlit as st
+                if hasattr(st, "secrets") and "LLM_PROVIDER" in st.secrets:
+                    provider = str(st.secrets["LLM_PROVIDER"]).strip()
+            except Exception:
+                pass
+        self.provider = (provider or "gemini").lower()
         
         if not self.api_key:
-            raise ValueError("LLM_API_KEY environment variable is not set.")
+            raise ValueError("LLM_API_KEY environment variable or Streamlit secret is not set.")
             
         if self.provider == "gemini":
             from google import genai

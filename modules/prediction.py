@@ -61,14 +61,26 @@ def load_ml_models() -> Tuple[Any, Any]:
     return score_model, level_model, encoder_model
 
 
-import pkg_resources
-if not hasattr(pkg_resources, 'get_distribution'):
+try:
+    import pkg_resources
+    if not hasattr(pkg_resources, 'get_distribution'):
+        class DistributionNotFound(Exception):
+            pass
+        def _mock_get_distribution(dist_name):
+            raise DistributionNotFound(dist_name)
+        pkg_resources.get_distribution = _mock_get_distribution
+        pkg_resources.DistributionNotFound = DistributionNotFound
+except ImportError:
+    import types
+    import sys
+    pkg_resources = types.ModuleType("pkg_resources")
     class DistributionNotFound(Exception):
         pass
     def _mock_get_distribution(dist_name):
         raise DistributionNotFound(dist_name)
     pkg_resources.get_distribution = _mock_get_distribution
     pkg_resources.DistributionNotFound = DistributionNotFound
+    sys.modules["pkg_resources"] = pkg_resources
 
 import xgboost as xgb
 
