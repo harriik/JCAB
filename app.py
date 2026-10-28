@@ -59,25 +59,63 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional educational dashboard CSS
+# Professional educational dashboard CSS supporting Light, Dark, and System themes
 st.markdown(
     """
     <style>
-    /* University Educational Dashboard Design System */
+    /* University Educational Dashboard Design System - Adaptive Theme Tokens */
     :root {
-        --edu-bg: #F3F6F8;
-        --edu-surface: #FFFFFF;
-        --edu-text: #1F2937;
-        --edu-text-secondary: #64748B;
-        --edu-accent: #168675;
-        --edu-accent-hover: #126E60;
-        --edu-accent-surface: #E8F5F1;
-        --edu-border: #E2E8F0;
+        color-scheme: light dark;
+        --edu-bg: light-dark(#F3F6F8, #0F172A);
+        --edu-surface: light-dark(#FFFFFF, #1E293B);
+        --edu-surface-muted: light-dark(#F8FAFC, #162032);
+        --edu-text: light-dark(#1F2937, #F8FAFC);
+        --edu-text-secondary: light-dark(#64748B, #94A3B8);
+        --edu-text-muted: light-dark(#94A3B8, #64748B);
+        --edu-accent: light-dark(#168675, #2DD4BF);
+        --edu-accent-hover: light-dark(#126E60, #14B8A6);
+        --edu-accent-surface: light-dark(#E8F5F1, rgba(45, 212, 191, 0.12));
+        --edu-accent-border: light-dark(#A7F3D0, rgba(45, 212, 191, 0.28));
+        --edu-border: light-dark(#E2E8F0, #334155);
+        --edu-divider: light-dark(#CBD5E1, #475569);
+        --edu-card-shadow: light-dark(0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(0, 0, 0, 0.3));
+
+        --edu-bullet-green-bg: light-dark(#F0FDF4, rgba(22, 163, 74, 0.15));
+        --edu-bullet-green-border: light-dark(#BBF7D0, rgba(22, 163, 74, 0.35));
+        --edu-bullet-green-text: light-dark(#166534, #86EFAC);
+
+        --edu-bullet-amber-bg: light-dark(#FFFBEB, rgba(217, 119, 6, 0.15));
+        --edu-bullet-amber-border: light-dark(#FDE68A, rgba(217, 119, 6, 0.35));
+        --edu-bullet-amber-text: light-dark(#92400E, #FDE68A);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --edu-bg: #0F172A;
+            --edu-surface: #1E293B;
+            --edu-surface-muted: #162032;
+            --edu-text: #F8FAFC;
+            --edu-text-secondary: #94A3B8;
+            --edu-text-muted: #64748B;
+            --edu-accent: #2DD4BF;
+            --edu-accent-hover: #14B8A6;
+            --edu-accent-surface: rgba(45, 212, 191, 0.12);
+            --edu-accent-border: rgba(45, 212, 191, 0.28);
+            --edu-border: #334155;
+            --edu-divider: #475569;
+            --edu-card-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+            --edu-bullet-green-bg: rgba(22, 163, 74, 0.15);
+            --edu-bullet-green-border: rgba(22, 163, 74, 0.35);
+            --edu-bullet-green-text: #86EFAC;
+
+            --edu-bullet-amber-bg: rgba(217, 119, 6, 0.15);
+            --edu-bullet-amber-border: rgba(217, 119, 6, 0.35);
+            --edu-bullet-amber-text: #FDE68A;
+        }
     }
     
     .stApp {
-        background-color: #F3F6F8 !important;
-        color: #1F2937 !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
     }
     
@@ -87,19 +125,15 @@ st.markdown(
         max-width: 1040px !important;
     }
 
-    /* Sidebar polish */
+    /* Sidebar polish - preserve native theme background with adaptive border */
     section[data-testid="stSidebar"] {
-        background-color: #FFFFFF !important;
-        border-right: 1px solid #E2E8F0 !important;
-    }
-    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {
-        color: #1F2937 !important;
+        border-right: 1px solid var(--edu-border) !important;
     }
 
     /* Primary and Secondary Buttons */
     div.stButton > button[kind="primary"] {
-        background-color: #168675 !important;
-        color: #FFFFFF !important;
+        background-color: var(--edu-accent) !important;
+        color: light-dark(#FFFFFF, #0F172A) !important;
         border: none !important;
         border-radius: 6px !important;
         font-weight: 600 !important;
@@ -108,13 +142,13 @@ st.markdown(
         transition: all 0.15s ease-in-out !important;
     }
     div.stButton > button[kind="primary"]:hover {
-        background-color: #126E60 !important;
+        background-color: var(--edu-accent-hover) !important;
         box-shadow: 0 2px 5px rgba(22, 134, 117, 0.25) !important;
     }
     div.stButton > button[kind="secondary"] {
-        background-color: #FFFFFF !important;
-        color: #1F2937 !important;
-        border: 1px solid #CBD5E1 !important;
+        background-color: var(--edu-surface) !important;
+        color: var(--edu-text) !important;
+        border: 1px solid var(--edu-border) !important;
         border-radius: 6px !important;
         font-weight: 500 !important;
         font-size: 0.95rem !important;
@@ -122,27 +156,29 @@ st.markdown(
         transition: all 0.15s ease-in-out !important;
     }
     div.stButton > button[kind="secondary"]:hover {
-        background-color: #F8FAFC !important;
-        border-color: #94A3B8 !important;
+        background-color: var(--edu-surface-muted) !important;
+        border-color: var(--edu-accent) !important;
     }
 
     /* Cards & Containers */
     .edu-card {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
         border-radius: 8px;
         padding: 1.5rem;
         margin-bottom: 1.25rem;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        box-shadow: var(--edu-card-shadow);
+        color: var(--edu-text);
     }
     
     .edu-hero {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
         border-radius: 8px;
         padding: 2.25rem 2.5rem;
         margin-bottom: 2rem;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        box-shadow: var(--edu-card-shadow);
+        color: var(--edu-text);
     }
 
     /* Step Indicator */
@@ -150,61 +186,61 @@ st.markdown(
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
         border-radius: 8px;
         padding: 0.75rem 1.5rem;
         margin-bottom: 1.75rem;
         font-size: 0.875rem;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+        box-shadow: var(--edu-card-shadow);
     }
     .step-item {
-        color: #64748B;
+        color: var(--edu-text-secondary);
         font-weight: 500;
         display: flex;
         align-items: center;
         gap: 0.4rem;
     }
     .step-item.active {
-        color: #168675;
+        color: var(--edu-accent);
         font-weight: 700;
     }
     .step-item.completed {
-        color: #1F2937;
+        color: var(--edu-text);
         font-weight: 600;
     }
     .step-divider {
-        color: #CBD5E1;
+        color: var(--edu-divider);
         font-weight: 300;
     }
 
     /* Question & Response Boxes */
     .edu-q-box {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-left: 4px solid #168675;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
+        border-left: 4px solid var(--edu-accent);
         border-radius: 8px;
         padding: 1.25rem 1.5rem;
         margin-bottom: 1.25rem;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        box-shadow: var(--edu-card-shadow);
     }
     .edu-q-label {
         font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #168675;
+        color: var(--edu-accent);
         margin-bottom: 0.4rem;
     }
     .edu-q-text {
         font-size: 1.1rem;
         font-weight: 600;
-        color: #1F2937;
+        color: var(--edu-text);
         line-height: 1.55;
     }
     .edu-resp-box {
-        background-color: #F8FAFC;
-        border: 1px solid #E2E8F0;
+        background-color: var(--edu-surface-muted);
+        border: 1px solid var(--edu-border);
         border-radius: 8px;
         padding: 1rem 1.25rem;
         margin-bottom: 1.25rem;
@@ -214,28 +250,28 @@ st.markdown(
         font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #64748B;
+        color: var(--edu-text-secondary);
         margin-bottom: 0.35rem;
     }
     .edu-resp-text {
         font-size: 1rem;
-        color: #334155;
+        color: var(--edu-text);
         line-height: 1.5;
     }
 
     /* Educational Result Metric Cards */
     .edu-metric-card {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
         border-radius: 8px;
         padding: 1.25rem;
         text-align: center;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        box-shadow: var(--edu-card-shadow);
     }
     .edu-metric-val {
         font-size: 1.85rem;
         font-weight: 700;
-        color: #168675;
+        color: var(--edu-accent);
         line-height: 1.2;
     }
     .edu-metric-lbl {
@@ -243,71 +279,71 @@ st.markdown(
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #64748B;
+        color: var(--edu-text-secondary);
         margin-top: 0.35rem;
     }
 
     .edu-section-title {
         font-size: 1.05rem;
         font-weight: 700;
-        color: #1F2937;
+        color: var(--edu-text);
         margin-top: 0;
         margin-bottom: 0.75rem;
     }
 
     .edu-bullet-green {
-        background-color: #F0FDF4;
-        border: 1px solid #BBF7D0;
+        background-color: var(--edu-bullet-green-bg);
+        border: 1px solid var(--edu-bullet-green-border);
         border-radius: 6px;
         padding: 0.65rem 0.9rem;
         margin-bottom: 0.5rem;
-        color: #166534;
+        color: var(--edu-bullet-green-text);
         font-size: 0.95rem;
         line-height: 1.5;
     }
     .edu-bullet-amber {
-        background-color: #FFFBEB;
-        border: 1px solid #FDE68A;
+        background-color: var(--edu-bullet-amber-bg);
+        border: 1px solid var(--edu-bullet-amber-border);
         border-radius: 6px;
         padding: 0.65rem 0.9rem;
         margin-bottom: 0.5rem;
-        color: #92400E;
+        color: var(--edu-bullet-amber-text);
         font-size: 0.95rem;
         line-height: 1.5;
     }
     .edu-bullet-action {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-left: 3px solid #168675;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
+        border-left: 3px solid var(--edu-accent);
         border-radius: 6px;
         padding: 0.65rem 0.9rem;
         margin-bottom: 0.5rem;
-        color: #1F2937;
+        color: var(--edu-text);
         font-size: 0.95rem;
         line-height: 1.5;
     }
 
     .edu-feedback-box {
-        background-color: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-left: 4px solid #2563EB;
+        background-color: var(--edu-surface-muted);
+        border: 1px solid var(--edu-border);
+        border-left: 4px solid #3B82F6;
         border-radius: 6px;
         padding: 1.15rem 1.35rem;
         font-size: 1rem;
         line-height: 1.6;
-        color: #1F2937;
+        color: var(--edu-text);
         margin-bottom: 1.25rem;
     }
 
     .edu-concept-box {
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-left: 4px solid #168675;
+        background-color: var(--edu-surface);
+        border: 1px solid var(--edu-border);
+        border-left: 4px solid var(--edu-accent);
         border-radius: 6px;
         padding: 1.15rem 1.35rem;
         font-size: 1rem;
         line-height: 1.6;
-        color: #1F2937;
+        color: var(--edu-text);
         margin-bottom: 1.25rem;
     }
     </style>
@@ -390,10 +426,10 @@ except Exception as exc:
 # ============================================================
 
 with st.sidebar:
-    st.markdown("<div style='font-size: 1.25rem; font-weight: 700; color: #1F2937; margin-bottom: 0.15rem; line-height: 1.2;'>Adaptive Assessment</div>", unsafe_allow_html=True)
-    st.markdown("<div style='font-size: 0.8rem; color: #64748B; margin-bottom: 1.25rem;'>Personalized Educational Assessment</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 1.25rem; font-weight: 700; color: var(--edu-text); margin-bottom: 0.15rem; line-height: 1.2;'>Adaptive Assessment</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 0.8rem; color: var(--edu-text-secondary); margin-bottom: 1.25rem;'>Personalized Educational Assessment</div>", unsafe_allow_html=True)
     
-    st.markdown("<div style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94A3B8; margin-bottom: 0.5rem;'>Navigation</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--edu-text-muted); margin-bottom: 0.5rem;'>Navigation</div>", unsafe_allow_html=True)
     
     cur_p = st.session_state.current_page
     if st.button("🏠 Home", use_container_width=True, type="primary" if cur_p == "home" else "secondary"):
@@ -408,7 +444,7 @@ with st.sidebar:
         
     st.divider()
     
-    st.markdown("<div style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94A3B8; margin-bottom: 0.5rem;'>Settings</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--edu-text-muted); margin-bottom: 0.5rem;'>Settings</div>", unsafe_allow_html=True)
     st.session_state.demo_mode = st.toggle("Demo Mode (Safe Fallbacks)", value=st.session_state.demo_mode)
     if st.session_state.demo_mode:
         st.caption("⚡ Local deterministic fallback active")
@@ -585,9 +621,9 @@ def page_home():
     st.markdown(
         """
         <div class="edu-hero">
-            <h1 style="color: #1F2937; margin: 0 0 0.35rem 0; font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em;">Adaptive Assessment</h1>
-            <p style="color: #168675; margin: 0 0 1rem 0; font-size: 1.15rem; font-weight: 600; font-style: italic;">Understand your answers. Improve your learning.</p>
-            <p style="color: #4B5563; margin: 0; font-size: 1.05rem; line-height: 1.6; max-width: 700px;">
+            <h1 style="color: var(--edu-text); margin: 0 0 0.35rem 0; font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em;">Adaptive Assessment</h1>
+            <p style="color: var(--edu-accent); margin: 0 0 1rem 0; font-size: 1.15rem; font-weight: 600; font-style: italic;">Understand your answers. Improve your learning.</p>
+            <p style="color: var(--edu-text-secondary); margin: 0; font-size: 1.05rem; line-height: 1.6; max-width: 700px;">
                 Explore conceptual questions, receive feedback on your responses, and discover what to learn next.
             </p>
         </div>
@@ -612,8 +648,8 @@ def page_home():
         st.markdown(
             """
             <div class="edu-card" style="height: 100%;">
-                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: #168675; text-transform: uppercase; margin-bottom: 0.5rem;">Assess</div>
-                <div style="font-size: 0.95rem; color: #475569; line-height: 1.55;">
+                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: var(--edu-accent); text-transform: uppercase; margin-bottom: 0.5rem;">Assess</div>
+                <div style="font-size: 0.95rem; color: var(--edu-text-secondary); line-height: 1.55;">
                     Answer conceptual questions through a structured assessment.
                 </div>
             </div>
@@ -624,8 +660,8 @@ def page_home():
         st.markdown(
             """
             <div class="edu-card" style="height: 100%;">
-                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: #168675; text-transform: uppercase; margin-bottom: 0.5rem;">Understand</div>
-                <div style="font-size: 0.95rem; color: #475569; line-height: 1.55;">
+                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: var(--edu-accent); text-transform: uppercase; margin-bottom: 0.5rem;">Understand</div>
+                <div style="font-size: 0.95rem; color: var(--edu-text-secondary); line-height: 1.55;">
                     Review your strengths and identify concepts that need improvement.
                 </div>
             </div>
@@ -636,8 +672,8 @@ def page_home():
         st.markdown(
             """
             <div class="edu-card" style="height: 100%;">
-                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: #168675; text-transform: uppercase; margin-bottom: 0.5rem;">Improve</div>
-                <div style="font-size: 0.95rem; color: #475569; line-height: 1.55;">
+                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; color: var(--edu-accent); text-transform: uppercase; margin-bottom: 0.5rem;">Improve</div>
+                <div style="font-size: 0.95rem; color: var(--edu-text-secondary); line-height: 1.55;">
                     Explore short concept explanations and actionable learning recommendations.
                 </div>
             </div>
@@ -669,8 +705,8 @@ def page_setup():
     st.markdown(
         """
         <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.6rem; font-weight: 700; color: #1F2937; margin: 0 0 0.3rem 0;">Student Profile & Assessment Setup</h2>
-            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">Configure your participant details and select your assessment preferences.</p>
+            <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--edu-text); margin: 0 0 0.3rem 0;">Student Profile & Assessment Setup</h2>
+            <p style="color: var(--edu-text-secondary); font-size: 0.95rem; margin: 0;">Configure your participant details and select your assessment preferences.</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -679,9 +715,9 @@ def page_setup():
     with st.container():
         st.markdown(
             """
-            <div class="edu-card" style="margin-bottom: 1rem; background-color: #F8FAFC;">
-                <div style="font-size: 0.85rem; font-weight: 700; color: #1F2937; margin-bottom: 0.35rem;">Academic Research & Participation Notice</div>
-                <div style="font-size: 0.9rem; color: #475569; line-height: 1.55;">
+            <div class="edu-card" style="margin-bottom: 1rem; background-color: var(--edu-surface-muted);">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--edu-text); margin-bottom: 0.35rem;">Academic Research & Participation Notice</div>
+                <div style="font-size: 0.9rem; color: var(--edu-text-secondary); line-height: 1.55;">
                     Your participation is voluntary. Assessment responses and feedback are collected to evaluate and refine personalized educational conversational systems. All participant identifiers may be anonymous.
                 </div>
             </div>
@@ -694,14 +730,14 @@ def page_setup():
     st.markdown("<div style='height: 0.75rem;'></div>", unsafe_allow_html=True)
     
     with st.form("setup_form"):
-        st.markdown("<div style='font-weight: 700; color: #1F2937; margin-bottom: 0.75rem; font-size: 1.05rem;'>1. Participant Information</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-weight: 700; color: var(--edu-text); margin-bottom: 0.75rem; font-size: 1.05rem;'>1. Participant Information</div>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         student_name = c1.text_input("Full Name or Identifier", value=st.session_state.current_student, placeholder="e.g. Student A / Anonymous")
         student_id = c2.text_input("Participant ID", value=st.session_state.current_id, placeholder="e.g. MCA-2026-01")
         level = c3.selectbox("Self-Assessed Knowledge Level", ["Beginner", "Intermediate", "Advanced"], index=["Beginner", "Intermediate", "Advanced"].index(st.session_state.current_level) if st.session_state.current_level in ["Beginner", "Intermediate", "Advanced"] else 0)
         
         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
-        st.markdown("<div style='font-weight: 700; color: #1F2937; margin-bottom: 0.75rem; font-size: 1.05rem;'>2. Assessment Domain & Scope</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-weight: 700; color: var(--edu-text); margin-bottom: 0.75rem; font-size: 1.05rem;'>2. Assessment Domain & Scope</div>", unsafe_allow_html=True)
         
         domain_opts = list(DOMAINS.keys())
         selected_dom = st.selectbox(
@@ -715,12 +751,12 @@ def page_setup():
         dom_desc = DOMAINS[selected_dom]["description"]
         
         if dom_status == "available":
-            st.markdown(f"<div style='background-color: #E8F5F1; border: 1px solid #A7F3D0; border-radius: 6px; padding: 0.75rem 1rem; color: #168675; font-size: 0.9rem; margin-bottom: 1rem;'><b>Active Domain:</b> {selected_dom} — {dom_desc}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='background-color: var(--edu-accent-surface); border: 1px solid var(--edu-accent-border); border-radius: 6px; padding: 0.75rem 1rem; color: var(--edu-accent); font-size: 0.9rem; margin-bottom: 1rem;'><b>Active Domain:</b> {selected_dom} — {dom_desc}</div>", unsafe_allow_html=True)
         else:
-            st.markdown(f"<div style='background-color: #FFFBEB; border: 1px solid #FDE68A; border-radius: 6px; padding: 0.75rem 1rem; color: #92400E; font-size: 0.9rem; margin-bottom: 1rem;'><b>Upcoming Domain:</b> {selected_dom} (Planned in future releases) — {dom_desc}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='background-color: var(--edu-bullet-amber-bg); border: 1px solid var(--edu-bullet-amber-border); border-radius: 6px; padding: 0.75rem 1rem; color: var(--edu-bullet-amber-text); font-size: 0.9rem; margin-bottom: 1rem;'><b>Upcoming Domain:</b> {selected_dom} (Planned in future releases) — {dom_desc}</div>", unsafe_allow_html=True)
             
         st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
-        st.markdown("<div style='font-weight: 700; color: #1F2937; margin-bottom: 0.5rem; font-size: 1.05rem;'>3. Assessment Length</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-weight: 700; color: var(--edu-text); margin-bottom: 0.5rem; font-size: 1.05rem;'>3. Assessment Length</div>", unsafe_allow_html=True)
         num_questions = st.slider("Number of Questions to Complete", min_value=1, max_value=5, value=2, help="Choose between 1 and 5 questions for this assessment session.")
             
         st.markdown("<div style='height: 1.25rem;'></div>", unsafe_allow_html=True)
@@ -887,7 +923,7 @@ def page_chat():
             f"""
             <div class="edu-resp-box">
                 <div class="edu-resp-label">Initial Question & Your Response</div>
-                <div style="font-weight: 600; color: #1F2937; margin-bottom: 0.35rem;">{current_q_data['question']}</div>
+                <div style="font-weight: 600; color: var(--edu-text); margin-bottom: 0.35rem;">{current_q_data['question']}</div>
                 <div class="edu-resp-text">{st.session_state.initial_response}</div>
             </div>
             """,
@@ -1246,8 +1282,8 @@ def page_results():
     st.markdown(
         """
         <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.75rem; font-weight: 700; color: #1F2937; margin: 0 0 0.35rem 0;">Assessment Report</h2>
-            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">Comprehensive evaluation of conceptual understanding and educational recommendations.</p>
+            <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--edu-text); margin: 0 0 0.35rem 0;">Assessment Report</h2>
+            <p style="color: var(--edu-text-secondary); font-size: 0.95rem; margin: 0;">Comprehensive evaluation of conceptual understanding and educational recommendations.</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -1259,13 +1295,13 @@ def page_results():
     lvl_val = str(result.get('learner_level', 'Partial'))
     topic_val = str(result.get('topic', 'Java'))
     
-    lvl_color = "#168675" if lvl_val in ["Excellent", "Good"] else ("#B45309" if lvl_val == "Partial" else "#991B1B")
+    lvl_color = "var(--edu-accent)" if lvl_val in ["Excellent", "Good"] else ("#F59E0B" if lvl_val == "Partial" else "#F87171")
     
     with m1:
         st.markdown(
             f"""
             <div class="edu-metric-card">
-                <div class="edu-metric-val">{score_val:.2f} <span style="font-size: 1.05rem; font-weight: 500; color: #64748B;">/ 10</span></div>
+                <div class="edu-metric-val">{score_val:.2f} <span style="font-size: 1.05rem; font-weight: 500; color: var(--edu-text-secondary);">/ 10</span></div>
                 <div class="edu-metric-lbl">Assessment Score</div>
             </div>
             """,
@@ -1285,7 +1321,7 @@ def page_results():
         st.markdown(
             f"""
             <div class="edu-metric-card">
-                <div class="edu-metric-val" style="font-size: 1.35rem; color: #1F2937; padding-top: 0.35rem;">{topic_val}</div>
+                <div class="edu-metric-val" style="font-size: 1.35rem; color: var(--edu-text); padding-top: 0.35rem;">{topic_val}</div>
                 <div class="edu-metric-lbl">Assessed Topic</div>
             </div>
             """,
@@ -1300,8 +1336,8 @@ def page_results():
         st.markdown(
             f"""
             <div class="edu-card" style="margin-bottom: 1.25rem;">
-                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748B; margin-bottom: 0.35rem;">Assessment Summary</div>
-                <div style="font-size: 1.05rem; font-weight: 600; color: #1F2937; line-height: 1.5;">{summary_text}</div>
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--edu-text-secondary); margin-bottom: 0.35rem;">Assessment Summary</div>
+                <div style="font-size: 1.05rem; font-weight: 600; color: var(--edu-text); line-height: 1.5;">{summary_text}</div>
             </div>
             """,
             unsafe_allow_html=True
